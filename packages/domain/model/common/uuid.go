@@ -13,6 +13,14 @@ func NewUUID(v string) (*UUID, error) {
 	return &i, nil
 }
 
+func GenerateUUID() (*UUID, error) {
+	id, err := uuid.NewRandom()
+	if err != nil {
+		return nil, err
+	}
+	return NewUUID(id.String())
+}
+
 func (v *UUID) String() string {
 	return string(*v)
 }
