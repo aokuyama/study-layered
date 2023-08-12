@@ -1,8 +1,8 @@
-package main
+package get_circle
 
 import (
-	"aokuyama/circle_scheduler-api/packages/domain/model/circle"
-	"aokuyama/circle_scheduler-api/packages/domain/model/common"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/common"
 )
 
 type Usecase struct {

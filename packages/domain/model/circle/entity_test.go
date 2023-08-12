@@ -3,9 +3,9 @@ package circle_test
 import (
 	"testing"
 
-	. "aokuyama/circle_scheduler-api/packages/domain/model/circle"
-	"aokuyama/circle_scheduler-api/packages/domain/model/common"
-	"aokuyama/circle_scheduler-api/packages/domain/util"
+	. "github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/common"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/util"
 
 	"github.com/stretchr/testify/assert"
 )

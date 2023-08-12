@@ -1,6 +1,6 @@
-package main
+package create_circle
 
-import "aokuyama/circle_scheduler-api/packages/domain/model/circle"
+import "github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
 
 type Usecase struct {
 	repository circle.CircleRepository

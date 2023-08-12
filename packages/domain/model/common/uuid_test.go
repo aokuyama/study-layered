@@ -3,7 +3,7 @@ package common_test
 import (
 	"testing"
 
-	. "aokuyama/circle_scheduler-api/packages/domain/model/common"
+	. "github.com/aokuyama/circle_scheduler-api/packages/domain/model/common"
 
 	"github.com/stretchr/testify/assert"
 )

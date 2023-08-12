@@ -1,6 +1,6 @@
 package circle
 
-import "aokuyama/circle_scheduler-api/packages/domain/model/common"
+import "github.com/aokuyama/circle_scheduler-api/packages/domain/model/common"
 
 type Circle struct {
 	ID   *CircleID
