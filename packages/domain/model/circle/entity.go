@@ -1,15 +1,11 @@
 package circle
 
-import (
-	"aokuyama/circle_scheduler-api/packages/domain/model/common"
-)
-
 type Circle struct {
-	ID common.UUID
+	ID CircleID
 }
 
-func NewCircle(id common.UUID) (*Circle, error) {
-	c := Circle{id}
+func NewCircle(id *CircleID) (*Circle, error) {
+	c := Circle{*id}
 	return &c, nil
 }
 
