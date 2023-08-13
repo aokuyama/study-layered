@@ -9,17 +9,22 @@ type Usecase struct {
 	repository circle.CircleRepository
 }
 
+func New(r circle.CircleRepository) *Usecase {
+	u := Usecase{r}
+	return &u
+}
+
 type Input struct {
-	id string
+	ID string
 }
 
 type Output struct {
-	circle *circle.Circle
+	Circle *circle.Circle
 }
 
 func (u *Usecase) Invoke(i *Input) (*Output, error) {
 	var err error
-	id, err := common.NewUUID(i.id)
+	id, err := common.NewUUID(i.ID)
 	if err != nil {
 		return nil, err
 	}

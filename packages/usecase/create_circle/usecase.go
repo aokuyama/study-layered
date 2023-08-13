@@ -7,17 +7,22 @@ type Usecase struct {
 }
 
 type Input struct {
-	name string
+	Name string
 }
 
 type Output struct {
-	circle *circle.Circle
+	Circle *circle.Circle
+}
+
+func New(r circle.CircleRepository) *Usecase {
+	u := Usecase{r}
+	return &u
 }
 
 func (u *Usecase) Invoke(i *Input) (*Output, error) {
 	var c *circle.Circle
 	var err error
-	c, err = circle.GenerateCircle(&i.name)
+	c, err = circle.GenerateCircle(&i.Name)
 	if err != nil {
 		return nil, err
 	}
