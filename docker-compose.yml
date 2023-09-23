@@ -10,3 +10,17 @@ services:
     tty: true
     environment:
       - TZ=${TZ:-}
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres?schema=public&connect_timeout=10
+  db:
+    image: postgres:15.4-bullseye
+    ports:
+      - ${DEV_PORT_DB:-15432}:5432
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      - TZ=${TZ:-}
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+volumes:
+  db:
+    driver: local
