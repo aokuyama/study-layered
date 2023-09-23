@@ -4,12 +4,12 @@ import (
 	"github.com/aokuyama/circle_scheduler-api/packages/infra/prisma/db"
 )
 
-type PrismaClient struct {
+type Prisma struct {
 	client *db.PrismaClient
 }
 
-func NewPrismaClient() *PrismaClient {
+func NewPrismaClient() *Prisma {
 	client := db.NewClient()
-	c := PrismaClient{client}
+	c := Prisma{client}
 	return &c
 }

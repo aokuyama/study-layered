@@ -15,7 +15,6 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 		println("error:")
-		fmt.Println(err)
 		return
 	}
 	fmt.Println(o.Circle.Name.String())

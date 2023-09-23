@@ -3,10 +3,10 @@ package prisma
 import "github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
 
 type CircleRepositoryPrisma struct {
-	client *PrismaClient
+	prisma *Prisma
 }
 
-func NewCircleRepositoryPrisma(client *PrismaClient) *CircleRepositoryPrisma {
+func NewCircleRepositoryPrisma(client *Prisma) *CircleRepositoryPrisma {
 	c := CircleRepositoryPrisma{client}
 	return &c
 }
