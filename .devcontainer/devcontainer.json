@@ -35,7 +35,8 @@
 	  "vscode": {
 		"extensions": [
 			"msyrus.go-doc",
-			"golang.go"
+			"golang.go",
+			"Prisma.prisma"
 		]
 	  }
 	}
