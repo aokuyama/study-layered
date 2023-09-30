@@ -1,6 +1,6 @@
 module github.com/aokuyama/circle_scheduler-api/packages/infra
 
-go 1.20
+go 1.21
 
 replace github.com/aokuyama/circle_scheduler-api/packages/domain => ./../../packages/domain
 

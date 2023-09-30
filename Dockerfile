@@ -1,4 +1,4 @@
-FROM golang:1.20.6-bookworm
+FROM golang:1.21.1-bookworm
 RUN apt-get update && \
     go install -v golang.org/x/tools/gopls@latest && \
     go install -v github.com/stamblerre/gocode@latest && \
