@@ -1,21 +1,24 @@
 package main
 
 import (
-	"fmt"
+	"os"
 
-	"github.com/aokuyama/circle_scheduler-api/packages/infra/repository/prisma"
-	"github.com/aokuyama/circle_scheduler-api/packages/usecase/create_circle"
+	"github.com/aokuyama/circle_scheduler-api/apps/cli/cmd"
+	"github.com/aokuyama/circle_scheduler-api/apps/cli/cmd/admin"
+	"github.com/spf13/cobra"
 )
 
+var rootCmd = &cobra.Command{}
+
 func main() {
-	c := prisma.NewPrismaClient()
-	r := prisma.NewCircleRepositoryPrisma(c)
-	u := create_circle.New(r)
-	o, err := u.Invoke(&create_circle.Input{Name: "circle1"})
+	err := rootCmd.Execute()
 	if err != nil {
-		fmt.Println(err)
-		println("error:")
-		return
+		os.Exit(1)
 	}
-	fmt.Println(o.Circle.Name.String())
+}
+
+func init() {
+	cmd.AdminCmd.AddCommand(admin.CreateOwnerCmd)
+	rootCmd.AddCommand(cmd.AdminCmd)
+	//rootCmd.Flags().BoolP("toggle", "t", false, "フラグの説明")
 }

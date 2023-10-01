@@ -13,8 +13,7 @@ import (
 func TestEntity(t *testing.T) {
 	var e *Owner
 	var err error
-	n := "circle"
-	e, err = GenerateOwner(&n)
+	e, err = GenerateOwner()
 	assert.Equal(t, 36, len(e.ID.String()))
 	assert.NoError(t, err)
 }

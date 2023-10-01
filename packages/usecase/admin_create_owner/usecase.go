@@ -1,4 +1,4 @@
-package create_circle
+package admin_create_owner
 
 import "github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner"
 
