@@ -7,26 +7,24 @@ generator db {
   provider = "go run github.com/steebchen/prisma-client-go"
 }
 
-model user {
-  id     Int      @id @default(autoincrement())
+model owner {
+  id     String   @unique
   circle circle[]
 }
 
 model circle {
-  id          Int     @id @default(autoincrement())
-  uuid        String  @unique
-  owner_id    Int
-  path_digest String  @unique
-  name        String
-  owner       user    @relation(fields: [owner_id], references: [id], onDelete: Cascade)
-  event       event[]
+  id       String  @unique
+  owner_id String
+  path     String  @unique
+  name     String
+  owner    owner   @relation(fields: [owner_id], references: [id], onDelete: Cascade)
+  event    event[]
 }
 
 model event {
-  id          Int    @id @default(autoincrement())
-  uuid        String @unique
-  circle_id   Int
-  path_digest String @unique
-  name        String
-  circle      circle @relation(fields: [circle_id], references: [id], onDelete: Cascade)
+  id        String @unique
+  circle_id String
+  path      String @unique
+  name      String
+  circle    circle @relation(fields: [circle_id], references: [id], onDelete: Cascade)
 }
