@@ -1,6 +1,7 @@
 package path
 
 import (
+	"crypto/rand"
 	"errors"
 	"regexp"
 	"unicode/utf8"
@@ -24,6 +25,33 @@ func NewPath(v string) (*Path, error) {
 	return &p, nil
 }
 
+func GeneratePath() (*Path, error) {
+	str, err := randomStr(16)
+	if err != nil {
+		return nil, err
+	}
+	return NewPath(str)
+}
+
 func (v *Path) String() string {
 	return "*****"
+}
+
+func (v *Path) Equals(p *Path) bool {
+	return v.value == p.value
+}
+
+func randomStr(digit uint32) (string, error) {
+	const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+	b := make([]byte, digit)
+	if _, err := rand.Read(b); err != nil {
+		return "", errors.New("unexpected error")
+	}
+
+	var result string
+	for _, v := range b {
+		result += string(letters[int(v)%len(letters)])
+	}
+	return result, nil
 }

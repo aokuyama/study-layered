@@ -46,3 +46,14 @@ func TestPathErrorChar(t *testing.T) {
 	assert.Nil(t, v)
 	assert.Error(t, err, "deny empty")
 }
+
+func TestGeneratePath(t *testing.T) {
+	var err error
+	v1, err := GeneratePath()
+	assert.Equal(t, "*****", v1.String())
+	assert.NoError(t, err)
+	v2, err := GeneratePath()
+	assert.Equal(t, "*****", v2.String())
+	assert.NoError(t, err)
+	assert.False(t, v1.Equals(v2))
+}
