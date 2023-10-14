@@ -24,7 +24,7 @@ func (r *OwnerRepositoryPrisma) Save(o *owner.Owner) (*owner.Owner, error) {
 	return o, nil
 }
 
-func (r *OwnerRepositoryPrisma) LoadByID(*owner.OwnerID) (*owner.Owner, error) {
+func (r *OwnerRepositoryPrisma) Find(*owner.OwnerID) (*owner.Owner, error) {
 	c, err := owner.GenerateOwner()
 	return c, err
 }

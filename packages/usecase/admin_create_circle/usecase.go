@@ -33,7 +33,7 @@ func (u *Usecase) Invoke(i *Input) (*Output, error) {
 		return nil, err
 	}
 
-	_, err = u.ownerRepository.LoadByID(id)
+	_, err = u.ownerRepository.Find(id)
 	if err != nil {
 		return nil, err
 	}

@@ -17,7 +17,7 @@ func TestInvoke(t *testing.T) {
 	defer ctrl.Finish()
 
 	or := mock_owner.NewMockOwnerRepository(ctrl)
-	or.EXPECT().LoadByID(gomock.Any()).Return(nil, nil)
+	or.EXPECT().Find(gomock.Any()).Return(nil, nil)
 
 	cr := mock_circle.NewMockCircleRepository(ctrl)
 	c := circle.Circle{}
@@ -49,7 +49,7 @@ func TestOwnerNotFoundError(t *testing.T) {
 	defer ctrl.Finish()
 
 	or := mock_owner.NewMockOwnerRepository(ctrl)
-	or.EXPECT().LoadByID(gomock.Any()).Return(nil, errors.New("owner not found"))
+	or.EXPECT().Find(gomock.Any()).Return(nil, errors.New("owner not found"))
 	cr := mock_circle.NewMockCircleRepository(ctrl)
 
 	u := New(or, cr)
@@ -65,7 +65,7 @@ func TestGenerateCircleError(t *testing.T) {
 	defer ctrl.Finish()
 
 	or := mock_owner.NewMockOwnerRepository(ctrl)
-	or.EXPECT().LoadByID(gomock.Any()).Return(nil, nil)
+	or.EXPECT().Find(gomock.Any()).Return(nil, nil)
 
 	cr := mock_circle.NewMockCircleRepository(ctrl)
 
@@ -82,7 +82,7 @@ func TestSaveError(t *testing.T) {
 	defer ctrl.Finish()
 
 	or := mock_owner.NewMockOwnerRepository(ctrl)
-	or.EXPECT().LoadByID(gomock.Any()).Return(nil, nil)
+	or.EXPECT().Find(gomock.Any()).Return(nil, nil)
 
 	cr := mock_circle.NewMockCircleRepository(ctrl)
 	cr.EXPECT().Save(gomock.Any()).Return(&circle.Circle{}, errors.New("save error"))
