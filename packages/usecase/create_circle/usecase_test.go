@@ -1,4 +1,4 @@
-package admin_create_circle_test
+package usecase_test
 
 import (
 	"errors"
@@ -7,7 +7,7 @@ import (
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
 	mock_circle "github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle/.mock"
 	mock_owner "github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner/.mock"
-	. "github.com/aokuyama/circle_scheduler-api/packages/usecase/admin_create_circle"
+	. "github.com/aokuyama/circle_scheduler-api/packages/usecase/create_circle"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
@@ -24,7 +24,7 @@ func TestInvoke(t *testing.T) {
 	cr.EXPECT().Save(gomock.Any()).Return(&c, nil)
 
 	u := New(or, cr)
-	out, err := u.Invoke(&Input{OwnerID: "550e8400-e29b-41d4-a716-446655440000", Name: "circle"})
+	out, err := u.Invoke(&CreateCircleInput{OwnerID: "550e8400-e29b-41d4-a716-446655440000", Name: "circle"})
 	assert.NoError(t, err)
 	assert.Equal(t, &c, out.Circle)
 }
@@ -37,7 +37,7 @@ func TestOwnerIDInputError(t *testing.T) {
 	cr := mock_circle.NewMockCircleRepository(ctrl)
 
 	u := New(or, cr)
-	out, err := u.Invoke(&Input{Name: "circle"})
+	out, err := u.Invoke(&CreateCircleInput{Name: "circle"})
 
 	assert.Error(t, err)
 	assert.Equal(t, "invalid UUID length: 0", err.Error())
@@ -53,7 +53,7 @@ func TestOwnerNotFoundError(t *testing.T) {
 	cr := mock_circle.NewMockCircleRepository(ctrl)
 
 	u := New(or, cr)
-	out, err := u.Invoke(&Input{OwnerID: "550e8400-e29b-41d4-a716-446655440000", Name: "circle"})
+	out, err := u.Invoke(&CreateCircleInput{OwnerID: "550e8400-e29b-41d4-a716-446655440000", Name: "circle"})
 
 	assert.Error(t, err)
 	assert.Equal(t, "owner not found", err.Error())
@@ -70,7 +70,7 @@ func TestGenerateCircleError(t *testing.T) {
 	cr := mock_circle.NewMockCircleRepository(ctrl)
 
 	u := New(or, cr)
-	out, err := u.Invoke(&Input{OwnerID: "550e8400-e29b-41d4-a716-446655440000"})
+	out, err := u.Invoke(&CreateCircleInput{OwnerID: "550e8400-e29b-41d4-a716-446655440000"})
 
 	assert.Error(t, err)
 	assert.Equal(t, "can`t be blank", err.Error())
@@ -88,7 +88,7 @@ func TestSaveError(t *testing.T) {
 	cr.EXPECT().Save(gomock.Any()).Return(&circle.Circle{}, errors.New("save error"))
 
 	u := New(or, cr)
-	out, err := u.Invoke(&Input{OwnerID: "550e8400-e29b-41d4-a716-446655440000", Name: "circle"})
+	out, err := u.Invoke(&CreateCircleInput{OwnerID: "550e8400-e29b-41d4-a716-446655440000", Name: "circle"})
 
 	assert.Error(t, err)
 	assert.Equal(t, "save error", err.Error())

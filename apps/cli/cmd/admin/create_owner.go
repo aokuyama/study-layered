@@ -2,7 +2,7 @@ package admin
 
 import (
 	"github.com/aokuyama/circle_scheduler-api/packages/infra/repository/prisma"
-	"github.com/aokuyama/circle_scheduler-api/packages/usecase/admin_create_owner"
+	usecase "github.com/aokuyama/circle_scheduler-api/packages/usecase/create_owner"
 	"github.com/spf13/cobra"
 )
 
@@ -20,8 +20,8 @@ var CreateOwnerCmd = &cobra.Command{
 		}()
 
 		o := prisma.NewOwnerRepositoryPrisma(p)
-		u := admin_create_owner.New(o)
-		out, err := u.Invoke(&admin_create_owner.Input{})
+		u := usecase.New(o)
+		out, err := u.Invoke(&usecase.CreateOwnerInput{})
 		if err != nil {
 			panic(err)
 		}

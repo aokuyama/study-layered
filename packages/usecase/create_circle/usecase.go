@@ -1,4 +1,4 @@
-package admin_create_circle
+package usecase
 
 import (
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
@@ -6,26 +6,26 @@ import (
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner"
 )
 
-type Usecase struct {
+type createCircle struct {
 	ownerRepository  owner.OwnerRepository
 	circleRepository circle.CircleRepository
 }
 
-type Input struct {
+type CreateCircleInput struct {
 	OwnerID string
 	Name    string
 }
 
-type Output struct {
+type createCircleOutput struct {
 	Circle *circle.Circle
 }
 
-func New(o owner.OwnerRepository, c circle.CircleRepository) *Usecase {
-	u := Usecase{o, c}
+func New(o owner.OwnerRepository, c circle.CircleRepository) *createCircle {
+	u := createCircle{o, c}
 	return &u
 }
 
-func (u *Usecase) Invoke(i *Input) (*Output, error) {
+func (u *createCircle) Invoke(i *CreateCircleInput) (*createCircleOutput, error) {
 	var c *circle.Circle
 	var err error
 	id, err := common.NewUUID(i.OwnerID)
@@ -46,6 +46,6 @@ func (u *Usecase) Invoke(i *Input) (*Output, error) {
 	if err != nil {
 		return nil, err
 	}
-	o := Output{c}
+	o := createCircleOutput{c}
 	return &o, nil
 }

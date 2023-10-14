@@ -1,24 +1,24 @@
-package admin_create_owner
+package usecase
 
 import "github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner"
 
-type Usecase struct {
+type createOwner struct {
 	repository owner.OwnerRepository
 }
 
-type Input struct {
+type CreateOwnerInput struct {
 }
 
-type Output struct {
+type createOwnerOutput struct {
 	Owner *owner.Owner
 }
 
-func New(r owner.OwnerRepository) *Usecase {
-	u := Usecase{r}
+func New(r owner.OwnerRepository) *createOwner {
+	u := createOwner{r}
 	return &u
 }
 
-func (u *Usecase) Invoke(i *Input) (*Output, error) {
+func (u *createOwner) Invoke(i *CreateOwnerInput) (*createOwnerOutput, error) {
 	var o *owner.Owner
 	var err error
 	o, err = owner.GenerateOwner()
@@ -29,6 +29,6 @@ func (u *Usecase) Invoke(i *Input) (*Output, error) {
 	if err != nil {
 		return nil, err
 	}
-	out := Output{o}
+	out := createOwnerOutput{o}
 	return &out, nil
 }
