@@ -1,6 +1,7 @@
 package admin_create_owner_test
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner"
@@ -24,4 +25,34 @@ func TestInvoke(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.Equal(t, &o, out.Owner)
+}
+
+func TestGenerateError(t *testing.T) {
+	t.Skip()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	r := mock_owner.NewMockOwnerRepository(ctrl)
+
+	u := New(r)
+	out, err := u.Invoke(&Input{ /* error input */ })
+
+	assert.Error(t, err)
+	assert.Nil(t, out)
+}
+
+func TestSaveError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	r := mock_owner.NewMockOwnerRepository(ctrl)
+	r.EXPECT().Save(gomock.Any()).Return(&owner.Owner{}, errors.New("save error"))
+
+	u := New(r)
+	out, err := u.Invoke(&Input{})
+
+	assert.Error(t, err)
+	assert.Equal(t, "save error", err.Error())
+	assert.Nil(t, out)
 }

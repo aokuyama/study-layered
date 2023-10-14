@@ -1,3 +1,4 @@
+//go:generate mockgen -source=$GOFILE -destination=.mock/$GOFILE
 package circle
 
 type CircleRepository interface {
