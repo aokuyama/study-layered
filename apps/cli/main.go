@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"github.com/aokuyama/circle_scheduler-api/apps/cli/cmd"
-	"github.com/aokuyama/circle_scheduler-api/apps/cli/cmd/admin"
 	"github.com/spf13/cobra"
 )
 
@@ -18,7 +17,5 @@ func main() {
 }
 
 func init() {
-	cmd.AdminCmd.AddCommand(admin.CreateOwnerCmd)
-	cmd.AdminCmd.AddCommand(admin.CreateCircleCmd())
-	rootCmd.AddCommand(cmd.AdminCmd)
+	rootCmd.AddCommand(cmd.AdminCmd())
 }

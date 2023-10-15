@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var CreateOwnerCmd = &cobra.Command{
+var createOwnerCmd = &cobra.Command{
 	Use:  "create_owner",
 	Long: "create owner",
 
@@ -28,4 +28,9 @@ var CreateOwnerCmd = &cobra.Command{
 		println(out.Owner.ID.String())
 		return nil
 	},
+}
+
+func CreateOwnerCmd() *cobra.Command {
+	//createOwnerCmd.Flags().String("name", "", "circle name")
+	return createOwnerCmd
 }
