@@ -14,7 +14,7 @@ var createCircleCmd = &cobra.Command{
 		n, _ := cmd.Flags().GetString("name")
 		i := usecase.CreateCircleInput{
 			OwnerID:    args[0],
-			CreateName: n,
+			CircleName: n,
 		}
 
 		p, err := prisma.NewPrismaClient()

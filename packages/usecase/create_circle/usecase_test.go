@@ -22,7 +22,7 @@ func TestInvoke(t *testing.T) {
 	cr.EXPECT().Save(gomock.Any()).Return(nil)
 
 	u := New(or, cr)
-	_, err := u.Invoke(&CreateCircleInput{OwnerID: "550e8400-e29b-41d4-a716-446655440000", CreateName: "circle"})
+	_, err := u.Invoke(&CreateCircleInput{OwnerID: "550e8400-e29b-41d4-a716-446655440000", CircleName: "circle"})
 	assert.NoError(t, err)
 }
 
@@ -34,7 +34,7 @@ func TestOwnerIDInputError(t *testing.T) {
 	cr := mock_circle.NewMockCircleRepository(ctrl)
 
 	u := New(or, cr)
-	out, err := u.Invoke(&CreateCircleInput{CreateName: "circle"})
+	out, err := u.Invoke(&CreateCircleInput{CircleName: "circle"})
 
 	assert.Error(t, err)
 	assert.Equal(t, "invalid UUID length: 0", err.Error())
@@ -50,7 +50,7 @@ func TestOwnerNotFoundError(t *testing.T) {
 	cr := mock_circle.NewMockCircleRepository(ctrl)
 
 	u := New(or, cr)
-	out, err := u.Invoke(&CreateCircleInput{OwnerID: "550e8400-e29b-41d4-a716-446655440000", CreateName: "circle"})
+	out, err := u.Invoke(&CreateCircleInput{OwnerID: "550e8400-e29b-41d4-a716-446655440000", CircleName: "circle"})
 
 	assert.Error(t, err)
 	assert.Equal(t, "owner not found", err.Error())
@@ -85,7 +85,7 @@ func TestSaveError(t *testing.T) {
 	cr.EXPECT().Save(gomock.Any()).Return(errors.New("save error"))
 
 	u := New(or, cr)
-	out, err := u.Invoke(&CreateCircleInput{OwnerID: "550e8400-e29b-41d4-a716-446655440000", CreateName: "circle"})
+	out, err := u.Invoke(&CreateCircleInput{OwnerID: "550e8400-e29b-41d4-a716-446655440000", CircleName: "circle"})
 
 	assert.Error(t, err)
 	assert.Equal(t, "save error", err.Error())
