@@ -2,6 +2,6 @@
 package owner
 
 type OwnerRepository interface {
-	Save(*Owner) (*Owner, error)
+	Save(*Owner) error
 	Find(*OwnerID) (*Owner, error)
 }

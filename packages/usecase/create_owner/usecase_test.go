@@ -4,7 +4,6 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner"
 	mock_owner "github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner/.mock"
 	. "github.com/aokuyama/circle_scheduler-api/packages/usecase/create_owner"
 	"go.uber.org/mock/gomock"
@@ -17,14 +16,12 @@ func TestInvoke(t *testing.T) {
 	defer ctrl.Finish()
 
 	r := mock_owner.NewMockOwnerRepository(ctrl)
-	o := owner.Owner{}
-	r.EXPECT().Save(gomock.Any()).Return(&o, nil)
+	r.EXPECT().Save(gomock.Any()).Return(nil)
 
 	u := New(r)
-	out, err := u.Invoke(&CreateOwnerInput{})
+	_, err := u.Invoke(&CreateOwnerInput{})
 
 	assert.NoError(t, err)
-	assert.Equal(t, &o, out.Owner)
 }
 
 func TestGenerateError(t *testing.T) {
@@ -47,7 +44,7 @@ func TestSaveError(t *testing.T) {
 	defer ctrl.Finish()
 
 	r := mock_owner.NewMockOwnerRepository(ctrl)
-	r.EXPECT().Save(gomock.Any()).Return(&owner.Owner{}, errors.New("save error"))
+	r.EXPECT().Save(gomock.Any()).Return(errors.New("save error"))
 
 	u := New(r)
 	out, err := u.Invoke(&CreateOwnerInput{})

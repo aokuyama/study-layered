@@ -2,6 +2,6 @@
 package circle
 
 type CircleRepository interface {
-	Save(*Circle) (*Circle, error)
+	Save(*Circle) error
 	Find(*CircleID) (*Circle, error)
 }

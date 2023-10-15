@@ -19,13 +19,12 @@ func New(r owner.OwnerRepository) *createOwner {
 }
 
 func (u *createOwner) Invoke(i *CreateOwnerInput) (*createOwnerOutput, error) {
-	var o *owner.Owner
 	var err error
-	o, err = owner.GenerateOwner()
+	o, err := owner.GenerateOwner()
 	if err != nil {
 		return nil, err
 	}
-	o, err = u.repository.Save(o)
+	err = u.repository.Save(o)
 	if err != nil {
 		return nil, err
 	}

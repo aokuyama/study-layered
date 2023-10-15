@@ -26,7 +26,6 @@ func New(o owner.OwnerRepository, c circle.CircleRepository) *createCircle {
 }
 
 func (u *createCircle) Invoke(i *CreateCircleInput) (*createCircleOutput, error) {
-	var c *circle.Circle
 	var err error
 	ownerID, err := common.NewUUID(i.OwnerID)
 	if err != nil {
@@ -38,11 +37,11 @@ func (u *createCircle) Invoke(i *CreateCircleInput) (*createCircleOutput, error)
 		return nil, err
 	}
 
-	c, err = circle.GenerateCircle(ownerID, &i.CreateName)
+	c, err := circle.GenerateCircle(ownerID, &i.CreateName)
 	if err != nil {
 		return nil, err
 	}
-	c, err = u.circleRepository.Save(c)
+	err = u.circleRepository.Save(c)
 	if err != nil {
 		return nil, err
 	}

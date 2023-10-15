@@ -4,7 +4,6 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
 	mock_circle "github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle/.mock"
 	mock_owner "github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner/.mock"
 	. "github.com/aokuyama/circle_scheduler-api/packages/usecase/create_circle"
@@ -20,13 +19,11 @@ func TestInvoke(t *testing.T) {
 	or.EXPECT().Find(gomock.Any()).Return(nil, nil)
 
 	cr := mock_circle.NewMockCircleRepository(ctrl)
-	c := circle.Circle{}
-	cr.EXPECT().Save(gomock.Any()).Return(&c, nil)
+	cr.EXPECT().Save(gomock.Any()).Return(nil)
 
 	u := New(or, cr)
-	out, err := u.Invoke(&CreateCircleInput{OwnerID: "550e8400-e29b-41d4-a716-446655440000", CreateName: "circle"})
+	_, err := u.Invoke(&CreateCircleInput{OwnerID: "550e8400-e29b-41d4-a716-446655440000", CreateName: "circle"})
 	assert.NoError(t, err)
-	assert.Equal(t, &c, out.Circle)
 }
 
 func TestOwnerIDInputError(t *testing.T) {
@@ -85,7 +82,7 @@ func TestSaveError(t *testing.T) {
 	or.EXPECT().Find(gomock.Any()).Return(nil, nil)
 
 	cr := mock_circle.NewMockCircleRepository(ctrl)
-	cr.EXPECT().Save(gomock.Any()).Return(&circle.Circle{}, errors.New("save error"))
+	cr.EXPECT().Save(gomock.Any()).Return(errors.New("save error"))
 
 	u := New(or, cr)
 	out, err := u.Invoke(&CreateCircleInput{OwnerID: "550e8400-e29b-41d4-a716-446655440000", CreateName: "circle"})

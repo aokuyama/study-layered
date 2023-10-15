@@ -14,17 +14,15 @@ func NewCircleRepositoryPrisma(client *Prisma) *CircleRepositoryPrisma {
 	return &c
 }
 
-func (r *CircleRepositoryPrisma) Save(c *circle.Circle) (*circle.Circle, error) {
+func (r *CircleRepositoryPrisma) Save(c *circle.Circle) error {
 	_, err := r.prisma.client.Circle.CreateOne(
 		db.Circle.ID.Set(c.ID.String()),
 		db.Circle.Path.Set(c.Path.Digest()),
 		db.Circle.Name.Set(c.Name.String()),
 		db.Circle.Owner.Link(db.Owner.ID.Set(c.OwnerID.String())),
 	).Exec(r.prisma.ctx)
-	if err != nil {
-		return nil, err
-	}
-	return c, nil
+
+	return err
 }
 
 func (r *CircleRepositoryPrisma) Find(*circle.CircleID) (*circle.Circle, error) {

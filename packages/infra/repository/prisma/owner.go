@@ -15,14 +15,12 @@ func NewOwnerRepositoryPrisma(client *Prisma) *OwnerRepositoryPrisma {
 	return &c
 }
 
-func (r *OwnerRepositoryPrisma) Save(o *owner.Owner) (*owner.Owner, error) {
+func (r *OwnerRepositoryPrisma) Save(o *owner.Owner) error {
 	_, err := r.prisma.client.Owner.CreateOne(
 		db.Owner.ID.Set(o.ID.String()),
 	).Exec(r.prisma.ctx)
-	if err != nil {
-		return nil, err
-	}
-	return o, nil
+
+	return err
 }
 
 func (r *OwnerRepositoryPrisma) Find(i *owner.OwnerID) (*owner.Owner, error) {
