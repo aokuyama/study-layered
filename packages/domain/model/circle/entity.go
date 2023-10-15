@@ -10,8 +10,21 @@ type CircleEntity struct {
 	Name    *Name
 }
 
-func NewCircleEntity(id *CircleID, ownerID *owner.OwnerID, name *Name) (*CircleEntity, error) {
-	c := CircleEntity{id, ownerID, name}
+func NewCircleEntity(id *string, ownerID *string, name *string) (*CircleEntity, error) {
+	i, err := NewCircleID(*id)
+	if err != nil {
+		return nil, err
+	}
+	o, err := owner.NewOwnerID(*ownerID)
+	if err != nil {
+		return nil, err
+	}
+	n, err := NewName(*name)
+	if err != nil {
+		return nil, err
+	}
+
+	c := CircleEntity{i, o, n}
 	return &c, nil
 }
 

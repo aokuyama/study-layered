@@ -2,7 +2,6 @@ package prisma
 
 import (
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/common"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/common/path"
 	"github.com/aokuyama/circle_scheduler-api/packages/infra/prisma/db"
 )
@@ -33,11 +32,7 @@ func (r *CircleRepositoryPrisma) Find(i *circle.CircleID) (*circle.CircleEntity,
 	if err != nil {
 		return nil, err
 	}
-	return circle.NewCircleEntity(
-		(*common.UUID)(&f.ID),
-		(*common.UUID)(&f.OwnerID),
-		(*circle.Name)(&f.Name),
-	)
+	return circle.NewCircleEntity(&f.ID, &f.OwnerID, &f.Name)
 }
 
 func (r *CircleRepositoryPrisma) FindByPath(p *path.Path) (*circle.CircleEntity, error) {
@@ -49,11 +44,7 @@ func (r *CircleRepositoryPrisma) FindByPath(p *path.Path) (*circle.CircleEntity,
 		return nil, err
 	}
 
-	c, err := circle.NewCircleEntity(
-		(*common.UUID)(&f.ID),
-		(*common.UUID)(&f.OwnerID),
-		(*circle.Name)(&f.Name),
-	)
+	c, err := circle.NewCircleEntity(&f.ID, &f.OwnerID, &f.Name)
 	if err != nil {
 		return nil, err
 	}

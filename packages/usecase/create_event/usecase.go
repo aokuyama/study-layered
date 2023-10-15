@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/common"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/event"
 )
 
@@ -27,7 +26,7 @@ func New(o circle.CircleRepository, c event.EventRepository) *createEvent {
 
 func (u *createEvent) Invoke(i *CreateEventInput) (*createEventOutput, error) {
 	var err error
-	circleID, err := common.NewUUID(i.CircleID)
+	circleID, err := circle.NewCircleID(i.CircleID)
 	if err != nil {
 		return nil, err
 	}

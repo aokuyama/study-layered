@@ -10,8 +10,21 @@ type EventEntity struct {
 	Name     *Name
 }
 
-func NewEventEntity(id *EventID, circleID *circle.CircleID, name *Name) (*EventEntity, error) {
-	e := EventEntity{id, circleID, name}
+func NewEventEntity(id *string, circleID *string, name *string) (*EventEntity, error) {
+	i, err := NewEventID(*id)
+	if err != nil {
+		return nil, err
+	}
+	c, err := circle.NewCircleID(*circleID)
+	if err != nil {
+		return nil, err
+	}
+	n, err := NewName(*name)
+	if err != nil {
+		return nil, err
+	}
+
+	e := EventEntity{i, c, n}
 	return &e, nil
 }
 
