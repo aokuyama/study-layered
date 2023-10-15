@@ -17,6 +17,8 @@ func TestNewEntity(t *testing.T) {
 	n := "circle"
 
 	e, err = NewCircleEntity(&i, &o, &n)
+	assert.Equal(t, "26f90f21-dd19-4df1-81ff-ea9dcbcf03d1", e.ID.String())
+	assert.Equal(t, "d833a112-95e8-4042-ab02-ffde48bc874a", e.OwnerID.String())
 	assert.Equal(t, "circle", e.Name.String())
 	assert.NoError(t, err)
 }

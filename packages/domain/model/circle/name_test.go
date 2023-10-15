@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestUUID(t *testing.T) {
+func TestName(t *testing.T) {
 	var v *Name
 	var err error
 	v, err = NewName("abcdefghijklmnop")
@@ -19,7 +19,7 @@ func TestUUID(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestErrorUUID(t *testing.T) {
+func TestErrorName(t *testing.T) {
 	var v *Name
 	var err error
 	v, err = NewName("abcdefghijklmnopq")

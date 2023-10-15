@@ -28,6 +28,6 @@ func NewEventEntity(id *string, circleID *string, name *string) (*EventEntity, e
 	return &e, nil
 }
 
-func (e *EventEntity) Identical(c *EventEntity) bool {
-	return e.ID.Equals(c.ID)
+func (en *EventEntity) Identical(e *EventEntity) bool {
+	return en.ID.Equals(e.ID.UUID)
 }

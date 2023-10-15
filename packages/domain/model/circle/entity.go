@@ -29,5 +29,5 @@ func NewCircleEntity(id *string, ownerID *string, name *string) (*CircleEntity, 
 }
 
 func (e *CircleEntity) Identical(c *CircleEntity) bool {
-	return e.ID.Equals(c.ID)
+	return e.ID.Equals(c.ID.UUID)
 }

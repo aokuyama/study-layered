@@ -23,13 +23,14 @@ func GenerateRegisterCircle(ownerID *owner.OwnerID, name *string) (*RegisterCirc
 	if err != nil {
 		return nil, err
 	}
-	i, err := common.GenerateUUID()
+	u, err := common.GenerateUUID()
 	if err != nil {
 		return nil, err
 	}
+	i := CircleID{u}
 	p, err := path.GeneratePath()
 	if err != nil {
 		return nil, err
 	}
-	return newRegisterCircle(i, ownerID, n, p)
+	return newRegisterCircle(&i, ownerID, n, p)
 }

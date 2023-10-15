@@ -16,7 +16,8 @@ func TestEntity(t *testing.T) {
 	c := "d833a112-95e8-4042-ab02-ffde48bc874a"
 	n := "event"
 	e, err = NewEventEntity(&i, &c, &n)
-	assert.Equal(t, 36, len(e.ID.String()))
+	assert.Equal(t, "26f90f21-dd19-4df1-81ff-ea9dcbcf03d1", e.ID.String())
+	assert.Equal(t, "d833a112-95e8-4042-ab02-ffde48bc874a", e.CircleID.String())
 	assert.Equal(t, "event", e.Name.String())
 	assert.NoError(t, err)
 }

@@ -23,13 +23,14 @@ func GenerateRegisterEvent(circleID *circle.CircleID, name *string) (*RegisterEv
 	if err != nil {
 		return nil, err
 	}
-	i, err := common.GenerateUUID()
+	u, err := common.GenerateUUID()
 	if err != nil {
 		return nil, err
 	}
+	i := EventID{u}
 	p, err := path.GeneratePath()
 	if err != nil {
 		return nil, err
 	}
-	return newRegisterEvent(i, circleID, n, p)
+	return newRegisterEvent(&i, circleID, n, p)
 }

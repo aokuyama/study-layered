@@ -16,9 +16,10 @@ func GenerateOwner() (*Owner, error) {
 	if err != nil {
 		return nil, err
 	}
-	return NewOwner(i)
+	oi := OwnerID{i}
+	return NewOwner(&oi)
 }
 
 func (e *Owner) Identical(c *Owner) bool {
-	return e.ID.Equals(c.ID)
+	return e.ID.Equals(c.ID.UUID)
 }
