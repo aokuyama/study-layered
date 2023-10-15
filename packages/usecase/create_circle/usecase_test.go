@@ -74,7 +74,7 @@ func TestGenerateCircleError(t *testing.T) {
 	assert.Nil(t, out)
 }
 
-func TestSaveError(t *testing.T) {
+func TestCreateError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

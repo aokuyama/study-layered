@@ -17,7 +17,7 @@ type CreateEventInput struct {
 }
 
 type createEventOutput struct {
-	Event *event.Event
+	Event *event.RegisterEvent
 }
 
 func New(o circle.CircleRepository, c event.EventRepository) *createEvent {
@@ -37,11 +37,11 @@ func (u *createEvent) Invoke(i *CreateEventInput) (*createEventOutput, error) {
 		return nil, err
 	}
 
-	e, err := event.GenerateEvent(circleID, &i.EventName)
+	e, err := event.GenerateRegisterEvent(circleID, &i.EventName)
 	if err != nil {
 		return nil, err
 	}
-	err = u.eventRepository.Save(e)
+	err = u.eventRepository.Create(e)
 	if err != nil {
 		return nil, err
 	}

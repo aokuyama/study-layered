@@ -14,7 +14,7 @@ type ShowEventInput struct {
 }
 
 type showEventOutput struct {
-	Event *event.Event
+	Event *event.EventEntity
 }
 
 func New(c event.EventRepository) *showEvent {

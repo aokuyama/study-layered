@@ -5,7 +5,6 @@ import (
 
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/common"
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/common/path"
 	. "github.com/aokuyama/circle_scheduler-api/packages/domain/model/event"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/util"
 
@@ -15,23 +14,23 @@ import (
 var circleID circle.CircleID
 
 func TestEntity(t *testing.T) {
-	var e *Event
+	var e *EventEntity
 	var err error
-	n := "circle"
-	e, err = GenerateEvent(&circleID, &n)
+	n := util.PanicOr(NewName("event"))
+	i := util.PanicOr(common.GenerateUUID())
+	e, err = NewEventEntity(i, &circleID, n)
 	assert.Equal(t, 36, len(e.ID.String()))
-	assert.Equal(t, "circle", e.Name.String())
+	assert.Equal(t, "event", e.Name.String())
 	assert.NoError(t, err)
 }
 
 func TestIdenticalEntity(t *testing.T) {
 	n := util.PanicOr(NewName("a"))
-	p := util.PanicOr(path.GeneratePath())
 	i1 := util.PanicOr(common.GenerateUUID())
-	e1 := util.PanicOr(NewEvent(i1, &circleID, n, p))
-	e2 := util.PanicOr(NewEvent(i1, &circleID, n, p))
+	e1 := util.PanicOr(NewEventEntity(i1, &circleID, n))
+	e2 := util.PanicOr(NewEventEntity(i1, &circleID, n))
 	i2 := util.PanicOr(common.GenerateUUID())
-	e3 := util.PanicOr(NewEvent(i2, &circleID, n, p))
+	e3 := util.PanicOr(NewEventEntity(i2, &circleID, n))
 	assert.True(t, e1.Identical(e2))
 	assert.False(t, e1.Identical(e3))
 }

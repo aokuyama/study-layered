@@ -16,7 +16,7 @@ func NewEventRepositoryPrisma(client *Prisma) *EventRepositoryPrisma {
 	return &r
 }
 
-func (r *EventRepositoryPrisma) Save(e *event.Event) error {
+func (r *EventRepositoryPrisma) Create(e *event.RegisterEvent) error {
 	d := e.Path.Digest()
 	_, err := r.prisma.client().Event.CreateOne(
 		db.Event.ID.Set(e.ID.String()),
@@ -28,7 +28,7 @@ func (r *EventRepositoryPrisma) Save(e *event.Event) error {
 	return err
 }
 
-func (r *EventRepositoryPrisma) FindByPath(p *path.Path) (*event.Event, error) {
+func (r *EventRepositoryPrisma) FindByPath(p *path.Path) (*event.EventEntity, error) {
 	d := p.Digest()
 	f, err := r.prisma.client().Event.FindUnique(
 		db.Event.PathDigest.Equals(d[:]),
@@ -37,11 +37,10 @@ func (r *EventRepositoryPrisma) FindByPath(p *path.Path) (*event.Event, error) {
 		return nil, err
 	}
 
-	e, err := event.NewEvent(
+	e, err := event.NewEventEntity(
 		(*common.UUID)(&f.ID),
 		(*common.UUID)(&f.CircleID),
 		(*event.Name)(&f.Name),
-		p,
 	)
 	if err != nil {
 		return nil, err
