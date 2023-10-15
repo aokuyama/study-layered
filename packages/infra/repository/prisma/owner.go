@@ -1,6 +1,7 @@
 package prisma
 
 import (
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/common"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner"
 	"github.com/aokuyama/circle_scheduler-api/packages/infra/prisma/db"
 )
@@ -24,7 +25,10 @@ func (r *OwnerRepositoryPrisma) Save(o *owner.Owner) (*owner.Owner, error) {
 	return o, nil
 }
 
-func (r *OwnerRepositoryPrisma) Find(*owner.OwnerID) (*owner.Owner, error) {
-	c, err := owner.GenerateOwner()
-	return c, err
+func (r *OwnerRepositoryPrisma) Find(i *owner.OwnerID) (*owner.Owner, error) {
+	f, err := r.prisma.client.Owner.FindUnique(db.Owner.ID.Equals(i.String())).Exec(r.prisma.ctx)
+	if err != nil {
+		return nil, err
+	}
+	return owner.NewOwner((*common.UUID)(&f.ID))
 }

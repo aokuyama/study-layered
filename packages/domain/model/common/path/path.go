@@ -37,6 +37,14 @@ func (v *Path) String() string {
 	return "*****"
 }
 
+func (v *Path) RawValue() string {
+	return "not implemented"
+}
+
+func (v *Path) Digest() string {
+	return "not implemented"
+}
+
 func (v *Path) Equals(p *Path) bool {
 	return v.value == p.value
 }
