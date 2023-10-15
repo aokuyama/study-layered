@@ -33,6 +33,7 @@ var createCircleCmd = &cobra.Command{
 			panic(err)
 		}
 		println(out.Circle.ID.String())
+		println(out.Circle.Path.RawValue())
 		return nil
 	},
 }
