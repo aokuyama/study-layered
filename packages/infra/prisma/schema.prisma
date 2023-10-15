@@ -13,19 +13,20 @@ model owner {
 }
 
 model circle {
-  id       String  @unique
-  owner_id String
-  path     String  @unique
-  name     String
-  owner    owner   @relation(fields: [owner_id], references: [id], onDelete: Cascade)
-  event    event[]
+  id          String  @unique
+  owner_id    String
+  path_digest Bytes   @unique @db.ByteA
+  name        String
+  owner       owner   @relation(fields: [owner_id], references: [id], onDelete: Cascade)
+  event       event[]
+
   @@unique([owner_id, name])
 }
 
 model event {
-  id        String @unique
-  circle_id String
-  path      String @unique
-  name      String
-  circle    circle @relation(fields: [circle_id], references: [id], onDelete: Cascade)
+  id          String @unique
+  circle_id   String
+  path_digest Bytes  @unique @db.ByteA
+  name        String
+  circle      circle @relation(fields: [circle_id], references: [id], onDelete: Cascade)
 }
