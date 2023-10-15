@@ -4,7 +4,7 @@ package circle
 import "github.com/aokuyama/circle_scheduler-api/packages/domain/model/common/path"
 
 type CircleRepository interface {
-	Save(*Circle) error
-	Find(*CircleID) (*Circle, error)
-	FindByPath(*path.Path) (*Circle, error)
+	Create(*RegisterCircle) error
+	Find(*CircleID) (*CircleEntity, error)
+	FindByPath(*path.Path) (*CircleEntity, error)
 }

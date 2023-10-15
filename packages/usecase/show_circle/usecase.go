@@ -14,7 +14,7 @@ type ShowCircleInput struct {
 }
 
 type showCircleOutput struct {
-	Circle *circle.Circle
+	Circle *circle.CircleEntity
 }
 
 func New(c circle.CircleRepository) *showCircle {

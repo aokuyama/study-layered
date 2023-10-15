@@ -16,7 +16,7 @@ func NewCircleRepositoryPrisma(client *Prisma) *CircleRepositoryPrisma {
 	return &r
 }
 
-func (r *CircleRepositoryPrisma) Save(c *circle.Circle) error {
+func (r *CircleRepositoryPrisma) Create(c *circle.RegisterCircle) error {
 	d := c.Path.Digest()
 	_, err := r.prisma.client().Circle.CreateOne(
 		db.Circle.ID.Set(c.ID.String()),
@@ -28,21 +28,19 @@ func (r *CircleRepositoryPrisma) Save(c *circle.Circle) error {
 	return err
 }
 
-func (r *CircleRepositoryPrisma) Find(i *circle.CircleID) (*circle.Circle, error) {
+func (r *CircleRepositoryPrisma) Find(i *circle.CircleID) (*circle.CircleEntity, error) {
 	f, err := r.prisma.client().Circle.FindUnique(db.Circle.ID.Equals(i.String())).Exec(r.prisma.ctx)
 	if err != nil {
 		return nil, err
 	}
-	p := path.Path{}
-	return circle.NewCircle(
+	return circle.NewCircleEntity(
 		(*common.UUID)(&f.ID),
 		(*common.UUID)(&f.OwnerID),
 		(*circle.Name)(&f.Name),
-		&p,
 	)
 }
 
-func (r *CircleRepositoryPrisma) FindByPath(p *path.Path) (*circle.Circle, error) {
+func (r *CircleRepositoryPrisma) FindByPath(p *path.Path) (*circle.CircleEntity, error) {
 	d := p.Digest()
 	f, err := r.prisma.client().Circle.FindUnique(
 		db.Circle.PathDigest.Equals(d[:]),
@@ -51,11 +49,10 @@ func (r *CircleRepositoryPrisma) FindByPath(p *path.Path) (*circle.Circle, error
 		return nil, err
 	}
 
-	c, err := circle.NewCircle(
+	c, err := circle.NewCircleEntity(
 		(*common.UUID)(&f.ID),
 		(*common.UUID)(&f.OwnerID),
 		(*circle.Name)(&f.Name),
-		p,
 	)
 	if err != nil {
 		return nil, err

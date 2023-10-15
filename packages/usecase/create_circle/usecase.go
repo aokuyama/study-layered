@@ -17,7 +17,7 @@ type CreateCircleInput struct {
 }
 
 type createCircleOutput struct {
-	Circle *circle.Circle
+	Circle *circle.RegisterCircle
 }
 
 func New(o owner.OwnerRepository, c circle.CircleRepository) *createCircle {
@@ -37,11 +37,11 @@ func (u *createCircle) Invoke(i *CreateCircleInput) (*createCircleOutput, error)
 		return nil, err
 	}
 
-	c, err := circle.GenerateCircle(ownerID, &i.CircleName)
+	c, err := circle.GenerateRegisterCircle(ownerID, &i.CircleName)
 	if err != nil {
 		return nil, err
 	}
-	err = u.circleRepository.Save(c)
+	err = u.circleRepository.Create(c)
 	if err != nil {
 		return nil, err
 	}

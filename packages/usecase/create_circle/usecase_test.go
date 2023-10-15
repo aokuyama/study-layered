@@ -19,7 +19,7 @@ func TestInvoke(t *testing.T) {
 	or.EXPECT().Find(gomock.Any()).Return(nil, nil)
 
 	cr := mock_circle.NewMockCircleRepository(ctrl)
-	cr.EXPECT().Save(gomock.Any()).Return(nil)
+	cr.EXPECT().Create(gomock.Any()).Return(nil)
 
 	u := New(or, cr)
 	_, err := u.Invoke(&CreateCircleInput{OwnerID: "550e8400-e29b-41d4-a716-446655440000", CircleName: "circle"})
@@ -82,7 +82,7 @@ func TestSaveError(t *testing.T) {
 	or.EXPECT().Find(gomock.Any()).Return(nil, nil)
 
 	cr := mock_circle.NewMockCircleRepository(ctrl)
-	cr.EXPECT().Save(gomock.Any()).Return(errors.New("save error"))
+	cr.EXPECT().Create(gomock.Any()).Return(errors.New("save error"))
 
 	u := New(or, cr)
 	out, err := u.Invoke(&CreateCircleInput{OwnerID: "550e8400-e29b-41d4-a716-446655440000", CircleName: "circle"})

@@ -16,7 +16,7 @@ func TestInvoke(t *testing.T) {
 	defer ctrl.Finish()
 
 	cr := mock_circle.NewMockCircleRepository(ctrl)
-	c := &circle.Circle{}
+	c := &circle.CircleEntity{}
 	cr.EXPECT().FindByPath(gomock.Any()).Return(c, nil)
 
 	u := New(cr)
