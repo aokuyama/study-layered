@@ -1,6 +1,8 @@
 package prisma
 
 import (
+	"fmt"
+
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/common/path"
 	"github.com/aokuyama/circle_scheduler-api/packages/infra/prisma/db"
@@ -30,9 +32,13 @@ func (r *CircleRepositoryPrisma) Create(c *circle.RegisterCircle) error {
 func (r *CircleRepositoryPrisma) Find(i *circle.CircleID) (*circle.CircleEntity, error) {
 	f, err := r.prisma.client().Circle.FindUnique(db.Circle.ID.Equals(i.String())).Exec(r.prisma.ctx)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("not found\n%w", err)
 	}
-	return circle.NewCircleEntity(&f.ID, &f.OwnerID, &f.Name)
+	c, err := circle.NewCircleEntity(&f.ID, &f.OwnerID, &f.Name)
+	if err != nil {
+		panic(err)
+	}
+	return c, nil
 }
 
 func (r *CircleRepositoryPrisma) FindByPath(p *path.Path) (*circle.CircleEntity, error) {
@@ -41,12 +47,12 @@ func (r *CircleRepositoryPrisma) FindByPath(p *path.Path) (*circle.CircleEntity,
 		db.Circle.PathDigest.Equals(d[:]),
 	).Exec(r.prisma.ctx)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("not found\n%w", err)
 	}
 
 	c, err := circle.NewCircleEntity(&f.ID, &f.OwnerID, &f.Name)
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 	return c, nil
 }

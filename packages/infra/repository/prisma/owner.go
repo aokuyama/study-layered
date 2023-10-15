@@ -1,6 +1,8 @@
 package prisma
 
 import (
+	"fmt"
+
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner"
 	"github.com/aokuyama/circle_scheduler-api/packages/infra/prisma/db"
 )
@@ -26,11 +28,11 @@ func (r *OwnerRepositoryPrisma) Find(i *owner.OwnerID) (*owner.Owner, error) {
 	var err error
 	f, err := r.prisma.client().Owner.FindUnique(db.Owner.ID.Equals(i.String())).Exec(r.prisma.ctx)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("not found\n%w", err)
 	}
 	i, err = owner.NewOwnerID(f.ID)
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 	return owner.NewOwner(i)
 }
