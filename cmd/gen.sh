@@ -5,5 +5,5 @@ cd `dirname $0`/../packages/domain
 go generate ./...
 
 # generate prisma
-cd `dirname $0`/../packages/infra
+cd ../infra
 go run github.com/steebchen/prisma-client-go generate
