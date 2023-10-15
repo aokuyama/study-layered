@@ -2,6 +2,7 @@ package path
 
 import (
 	"crypto/rand"
+	"crypto/sha256"
 	"errors"
 	"regexp"
 	"unicode/utf8"
@@ -38,11 +39,11 @@ func (v *Path) String() string {
 }
 
 func (v *Path) RawValue() string {
-	return "not implemented"
+	return v.value
 }
 
-func (v *Path) Digest() string {
-	return "not implemented"
+func (v *Path) Digest() [32]byte {
+	return sha256.Sum256([]byte(v.value))
 }
 
 func (v *Path) Equals(p *Path) bool {
