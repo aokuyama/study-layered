@@ -12,8 +12,8 @@ type CircleRepositoryPrisma struct {
 }
 
 func NewCircleRepositoryPrisma(client *Prisma) *CircleRepositoryPrisma {
-	c := CircleRepositoryPrisma{client}
-	return &c
+	r := CircleRepositoryPrisma{client}
+	return &r
 }
 
 func (r *CircleRepositoryPrisma) Save(c *circle.Circle) error {
@@ -28,8 +28,18 @@ func (r *CircleRepositoryPrisma) Save(c *circle.Circle) error {
 	return err
 }
 
-func (r *CircleRepositoryPrisma) Find(*circle.CircleID) (*circle.Circle, error) {
-	panic("not implemented")
+func (r *CircleRepositoryPrisma) Find(i *circle.CircleID) (*circle.Circle, error) {
+	f, err := r.prisma.client.Circle.FindUnique(db.Circle.ID.Equals(i.String())).Exec(r.prisma.ctx)
+	if err != nil {
+		return nil, err
+	}
+	p := path.Path{}
+	return circle.NewCircle(
+		(*common.UUID)(&f.ID),
+		(*common.UUID)(&f.OwnerID),
+		(*circle.Name)(&f.Name),
+		&p,
+	)
 }
 
 func (r *CircleRepositoryPrisma) FindByPath(p *path.Path) (*circle.Circle, error) {

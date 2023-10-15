@@ -14,5 +14,7 @@ func AdminCmd() *cobra.Command {
 	adminCmd.AddCommand(admin.CreateOwnerCmd())
 	adminCmd.AddCommand(admin.CreateCircleCmd())
 	adminCmd.AddCommand(admin.ShowCircleCmd())
+	adminCmd.AddCommand(admin.CreateEventCmd())
+	adminCmd.AddCommand(admin.ShowEventCmd())
 	return adminCmd
 }

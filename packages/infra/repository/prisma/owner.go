@@ -11,8 +11,8 @@ type OwnerRepositoryPrisma struct {
 }
 
 func NewOwnerRepositoryPrisma(client *Prisma) *OwnerRepositoryPrisma {
-	c := OwnerRepositoryPrisma{client}
-	return &c
+	r := OwnerRepositoryPrisma{client}
+	return &r
 }
 
 func (r *OwnerRepositoryPrisma) Save(o *owner.Owner) error {
