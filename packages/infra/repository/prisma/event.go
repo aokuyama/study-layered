@@ -18,7 +18,7 @@ func NewEventRepositoryPrisma(client *Prisma) *EventRepositoryPrisma {
 
 func (r *EventRepositoryPrisma) Save(e *event.Event) error {
 	d := e.Path.Digest()
-	_, err := r.prisma.client.Event.CreateOne(
+	_, err := r.prisma.client().Event.CreateOne(
 		db.Event.ID.Set(e.ID.String()),
 		db.Event.PathDigest.Set(d[:]),
 		db.Event.Name.Set(e.Name.String()),
@@ -30,7 +30,7 @@ func (r *EventRepositoryPrisma) Save(e *event.Event) error {
 
 func (r *EventRepositoryPrisma) FindByPath(p *path.Path) (*event.Event, error) {
 	d := p.Digest()
-	f, err := r.prisma.client.Event.FindUnique(
+	f, err := r.prisma.client().Event.FindUnique(
 		db.Event.PathDigest.Equals(d[:]),
 	).Exec(r.prisma.ctx)
 	if err != nil {

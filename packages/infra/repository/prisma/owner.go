@@ -16,7 +16,7 @@ func NewOwnerRepositoryPrisma(client *Prisma) *OwnerRepositoryPrisma {
 }
 
 func (r *OwnerRepositoryPrisma) Save(o *owner.Owner) error {
-	_, err := r.prisma.client.Owner.CreateOne(
+	_, err := r.prisma.client().Owner.CreateOne(
 		db.Owner.ID.Set(o.ID.String()),
 	).Exec(r.prisma.ctx)
 
@@ -24,7 +24,7 @@ func (r *OwnerRepositoryPrisma) Save(o *owner.Owner) error {
 }
 
 func (r *OwnerRepositoryPrisma) Find(i *owner.OwnerID) (*owner.Owner, error) {
-	f, err := r.prisma.client.Owner.FindUnique(db.Owner.ID.Equals(i.String())).Exec(r.prisma.ctx)
+	f, err := r.prisma.client().Owner.FindUnique(db.Owner.ID.Equals(i.String())).Exec(r.prisma.ctx)
 	if err != nil {
 		return nil, err
 	}
