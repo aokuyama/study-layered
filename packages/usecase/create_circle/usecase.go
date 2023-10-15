@@ -12,8 +12,8 @@ type createCircle struct {
 }
 
 type CreateCircleInput struct {
-	OwnerID string
-	Name    string
+	OwnerID    string
+	CreateName string
 }
 
 type createCircleOutput struct {
@@ -38,7 +38,7 @@ func (u *createCircle) Invoke(i *CreateCircleInput) (*createCircleOutput, error)
 		return nil, err
 	}
 
-	c, err = circle.GenerateCircle(&i.Name)
+	c, err = circle.GenerateCircle(&i.CreateName)
 	if err != nil {
 		return nil, err
 	}

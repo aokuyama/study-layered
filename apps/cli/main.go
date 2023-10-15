@@ -19,6 +19,6 @@ func main() {
 
 func init() {
 	cmd.AdminCmd.AddCommand(admin.CreateOwnerCmd)
+	cmd.AdminCmd.AddCommand(admin.CreateCircleCmd())
 	rootCmd.AddCommand(cmd.AdminCmd)
-	//rootCmd.Flags().BoolP("toggle", "t", false, "フラグの説明")
 }
