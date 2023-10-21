@@ -4,18 +4,18 @@ go 1.21
 
 replace github.com/aokuyama/circle_scheduler-api/packages/domain => ./../../packages/domain
 
-replace github.com/aokuyama/circle_scheduler-api/packages/usecase => ./../../packages/usecase
+replace github.com/aokuyama/circle_scheduler-api/packages/application => ./../../packages/application
 
 replace github.com/aokuyama/circle_scheduler-api/packages/infra => ./../../packages/infra
 
 require (
+	github.com/aokuyama/circle_scheduler-api/packages/application v0.0.0-00010101000000-000000000000
+	github.com/aokuyama/circle_scheduler-api/packages/domain v0.0.0-00010101000000-000000000000
 	github.com/aokuyama/circle_scheduler-api/packages/infra v0.0.0-00010101000000-000000000000
-	github.com/aokuyama/circle_scheduler-api/packages/usecase v0.0.0-00010101000000-000000000000
 	github.com/spf13/cobra v1.7.0
 )
 
 require (
-	github.com/aokuyama/circle_scheduler-api/packages/domain v0.0.0-00010101000000-000000000000 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/iancoleman/strcase v0.0.0-20190422225806-e506e3ef7365 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect

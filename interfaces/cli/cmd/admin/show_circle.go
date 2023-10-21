@@ -1,17 +1,17 @@
 package admin
 
 import (
+	"github.com/aokuyama/circle_scheduler-api/packages/application/show_circle/usecase"
 	"github.com/aokuyama/circle_scheduler-api/packages/infra/repository/prisma"
-	usecase "github.com/aokuyama/circle_scheduler-api/packages/usecase/show_event"
 	"github.com/spf13/cobra"
 )
 
-var showEventCmd = &cobra.Command{
-	Use:  "show_event",
-	Long: "show event",
+var showCircleCmd = &cobra.Command{
+	Use:  "show_circle",
+	Long: "show circle",
 
 	RunE: func(cmd *cobra.Command, args []string) error {
-		i := usecase.ShowEventInput{
+		i := usecase.ShowCircleInput{
 			Path: args[0],
 		}
 
@@ -23,18 +23,18 @@ var showEventCmd = &cobra.Command{
 			p.Disconnect()
 		}()
 
-		cr := prisma.NewEventRepositoryPrisma(p)
+		cr := prisma.NewCircleRepositoryPrisma(p)
 		u := usecase.New(cr)
 		out, err := u.Invoke(&i)
 		if err != nil {
 			panic(err)
 		}
-		println(out.Event.ID.String())
-		println(out.Event.Name.String())
+		println(out.Circle.ID.String())
+		println(out.Circle.Name.String())
 		return nil
 	},
 }
 
-func ShowEventCmd() *cobra.Command {
-	return showEventCmd
+func ShowCircleCmd() *cobra.Command {
+	return showCircleCmd
 }

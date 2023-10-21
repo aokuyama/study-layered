@@ -1,4 +1,4 @@
-module github.com/aokuyama/circle_scheduler-api/packages/usecase
+module github.com/aokuyama/circle_scheduler-api/packages/application
 
 go 1.21
 

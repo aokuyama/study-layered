@@ -4,10 +4,10 @@ import (
 	"errors"
 	"testing"
 
+	. "github.com/aokuyama/circle_scheduler-api/packages/application/create_circle/usecase"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
 	mock_circle "github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle/.mock"
 	mock_owner "github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner/.mock"
-	. "github.com/aokuyama/circle_scheduler-api/packages/usecase/create_circle"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )

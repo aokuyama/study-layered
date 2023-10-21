@@ -1,9 +1,9 @@
 package admin
 
 import (
+	"github.com/aokuyama/circle_scheduler-api/packages/application/create_owner/usecase"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner"
 	"github.com/aokuyama/circle_scheduler-api/packages/infra/repository/prisma"
-	usecase "github.com/aokuyama/circle_scheduler-api/packages/usecase/create_owner"
 	"github.com/spf13/cobra"
 )
 

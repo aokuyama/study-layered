@@ -4,9 +4,9 @@ import (
 	"errors"
 	"testing"
 
+	. "github.com/aokuyama/circle_scheduler-api/packages/application/create_owner/usecase"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner"
 	mock_owner "github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner/.mock"
-	. "github.com/aokuyama/circle_scheduler-api/packages/usecase/create_owner"
 	"go.uber.org/mock/gomock"
 
 	"github.com/stretchr/testify/assert"
