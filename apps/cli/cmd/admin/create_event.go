@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/event"
 	"github.com/aokuyama/circle_scheduler-api/packages/infra/repository/prisma"
 	usecase "github.com/aokuyama/circle_scheduler-api/packages/usecase/create_event"
 	"github.com/spf13/cobra"
@@ -25,9 +26,10 @@ var createEventCmd = &cobra.Command{
 			p.Disconnect()
 		}()
 
+		f := event.EventFactoryImpl{}
 		or := prisma.NewCircleRepositoryPrisma(p)
 		cr := prisma.NewEventRepositoryPrisma(p)
-		u := usecase.New(or, cr)
+		u := usecase.New(f, or, cr)
 		out, err := u.Invoke(&i)
 		if err != nil {
 			panic(err)

@@ -3,6 +3,7 @@ package usecase
 import "github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner"
 
 type createOwner struct {
+	factory    owner.OwnerFactory
 	repository owner.OwnerRepository
 }
 
@@ -13,14 +14,14 @@ type createOwnerOutput struct {
 	Owner *owner.Owner
 }
 
-func New(r owner.OwnerRepository) *createOwner {
-	u := createOwner{r}
+func New(f owner.OwnerFactory, r owner.OwnerRepository) *createOwner {
+	u := createOwner{f, r}
 	return &u
 }
 
 func (u *createOwner) Invoke(i *CreateOwnerInput) (*createOwnerOutput, error) {
 	var err error
-	o, err := owner.GenerateOwner()
+	o, err := u.factory.Create()
 	if err != nil {
 		return nil, err
 	}

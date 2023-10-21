@@ -6,6 +6,7 @@ import (
 )
 
 type createEvent struct {
+	eventFactory     event.EventFactory
 	circleRepository circle.CircleRepository
 	eventRepository  event.EventRepository
 }
@@ -19,8 +20,8 @@ type createEventOutput struct {
 	Event *event.RegisterEvent
 }
 
-func New(o circle.CircleRepository, c event.EventRepository) *createEvent {
-	u := createEvent{o, c}
+func New(f event.EventFactory, or circle.CircleRepository, cr event.EventRepository) *createEvent {
+	u := createEvent{f, or, cr}
 	return &u
 }
 
@@ -36,7 +37,7 @@ func (u *createEvent) Invoke(i *CreateEventInput) (*createEventOutput, error) {
 		return nil, err
 	}
 
-	e, err := event.GenerateRegisterEvent(circleID, &i.EventName)
+	e, err := u.eventFactory.Create(circleID, &i.EventName)
 	if err != nil {
 		return nil, err
 	}

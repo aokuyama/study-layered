@@ -10,14 +10,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestEntity(t *testing.T) {
-	var e *Owner
-	var err error
-	e, err = GenerateOwner()
-	assert.Equal(t, 36, len(e.ID.String()))
-	assert.NoError(t, err)
-}
-
 func TestIdenticalEntity(t *testing.T) {
 	i1 := OwnerID{util.PanicOr(common.GenerateUUID())}
 	e1 := util.PanicOr(NewOwner(&i1))

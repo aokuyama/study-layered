@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	mock_circle "github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle/.mock"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/event"
 	mock_event "github.com/aokuyama/circle_scheduler-api/packages/domain/model/event/.mock"
 	. "github.com/aokuyama/circle_scheduler-api/packages/usecase/create_event"
 	"github.com/stretchr/testify/assert"
@@ -15,13 +16,16 @@ func TestInvoke(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
+	f := mock_event.NewMockEventFactory(ctrl)
+	f.EXPECT().Create(gomock.Any(), gomock.Any()).Return(&event.RegisterEvent{}, nil)
+
 	or := mock_circle.NewMockCircleRepository(ctrl)
 	or.EXPECT().Find(gomock.Any()).Return(nil, nil)
 
 	cr := mock_event.NewMockEventRepository(ctrl)
 	cr.EXPECT().Create(gomock.Any()).Return(nil)
 
-	u := New(or, cr)
+	u := New(f, or, cr)
 	_, err := u.Invoke(&CreateEventInput{CircleID: "550e8400-e29b-41d4-a716-446655440000", EventName: "event"})
 	assert.NoError(t, err)
 }
@@ -30,10 +34,11 @@ func TestCircleIDInputError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
+	f := mock_event.NewMockEventFactory(ctrl)
 	or := mock_circle.NewMockCircleRepository(ctrl)
 	cr := mock_event.NewMockEventRepository(ctrl)
 
-	u := New(or, cr)
+	u := New(f, or, cr)
 	out, err := u.Invoke(&CreateEventInput{EventName: "event"})
 
 	assert.Error(t, err)
@@ -45,11 +50,12 @@ func TestCircleNotFoundError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
+	f := mock_event.NewMockEventFactory(ctrl)
 	or := mock_circle.NewMockCircleRepository(ctrl)
 	or.EXPECT().Find(gomock.Any()).Return(nil, errors.New("circle not found"))
 	cr := mock_event.NewMockEventRepository(ctrl)
 
-	u := New(or, cr)
+	u := New(f, or, cr)
 	out, err := u.Invoke(&CreateEventInput{CircleID: "550e8400-e29b-41d4-a716-446655440000", EventName: "event"})
 
 	assert.Error(t, err)
@@ -57,20 +63,23 @@ func TestCircleNotFoundError(t *testing.T) {
 	assert.Nil(t, out)
 }
 
-func TestGenerateEventError(t *testing.T) {
+func TestCreateEventError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
+
+	f := mock_event.NewMockEventFactory(ctrl)
+	f.EXPECT().Create(gomock.Any(), gomock.Any()).Return(nil, errors.New("create error"))
 
 	or := mock_circle.NewMockCircleRepository(ctrl)
 	or.EXPECT().Find(gomock.Any()).Return(nil, nil)
 
 	cr := mock_event.NewMockEventRepository(ctrl)
 
-	u := New(or, cr)
+	u := New(f, or, cr)
 	out, err := u.Invoke(&CreateEventInput{CircleID: "550e8400-e29b-41d4-a716-446655440000"})
 
 	assert.Error(t, err)
-	assert.Equal(t, "can`t be blank", err.Error())
+	assert.Equal(t, "create error", err.Error())
 	assert.Nil(t, out)
 }
 
@@ -78,13 +87,16 @@ func TestCreateError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
+	f := mock_event.NewMockEventFactory(ctrl)
+	f.EXPECT().Create(gomock.Any(), gomock.Any()).Return(&event.RegisterEvent{}, nil)
+
 	or := mock_circle.NewMockCircleRepository(ctrl)
 	or.EXPECT().Find(gomock.Any()).Return(nil, nil)
 
 	cr := mock_event.NewMockEventRepository(ctrl)
 	cr.EXPECT().Create(gomock.Any()).Return(errors.New("save error"))
 
-	u := New(or, cr)
+	u := New(f, or, cr)
 	out, err := u.Invoke(&CreateEventInput{CircleID: "550e8400-e29b-41d4-a716-446655440000", EventName: "event"})
 
 	assert.Error(t, err)
