@@ -1,14 +1,11 @@
 package usecase
 
 import (
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/event"
 )
 
-type createEvent struct {
-	eventFactory     event.EventFactory
-	circleRepository circle.CircleRepository
-	eventRepository  event.EventRepository
+type CreateEventUsecase interface {
+	Invoke(i *CreateEventInput) (*CreateEventOutput, error)
 }
 
 type CreateEventInput struct {
@@ -16,35 +13,6 @@ type CreateEventInput struct {
 	EventName string
 }
 
-type createEventOutput struct {
+type CreateEventOutput struct {
 	Event *event.RegisterEvent
-}
-
-func New(f event.EventFactory, or circle.CircleRepository, cr event.EventRepository) *createEvent {
-	u := createEvent{f, or, cr}
-	return &u
-}
-
-func (u *createEvent) Invoke(i *CreateEventInput) (*createEventOutput, error) {
-	var err error
-	circleID, err := circle.NewCircleID(i.CircleID)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = u.circleRepository.Find(circleID)
-	if err != nil {
-		return nil, err
-	}
-
-	e, err := u.eventFactory.Create(circleID, &i.EventName)
-	if err != nil {
-		return nil, err
-	}
-	err = u.eventRepository.Create(e)
-	if err != nil {
-		return nil, err
-	}
-	o := createEventOutput{e}
-	return &o, nil
 }
