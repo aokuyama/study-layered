@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner"
-	"github.com/aokuyama/circle_scheduler-api/packages/infra/prisma/db"
+	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/prisma/db"
 )
 
 type OwnerRepositoryPrisma struct {

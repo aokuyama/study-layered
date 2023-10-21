@@ -5,7 +5,7 @@ import (
 
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/common/path"
-	"github.com/aokuyama/circle_scheduler-api/packages/infra/prisma/db"
+	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/prisma/db"
 )
 
 type CircleRepositoryPrisma struct {

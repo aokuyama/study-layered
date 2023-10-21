@@ -1,4 +1,4 @@
-module github.com/aokuyama/circle_scheduler-api/packages/infra
+module github.com/aokuyama/circle_scheduler-api/packages/infrastructure
 
 go 1.21
 

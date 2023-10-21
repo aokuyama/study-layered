@@ -4,7 +4,7 @@ import (
 	"context"
 	"log/slog"
 
-	"github.com/aokuyama/circle_scheduler-api/packages/infra/prisma/db"
+	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/prisma/db"
 )
 
 type Prisma struct {

@@ -6,12 +6,12 @@ replace github.com/aokuyama/circle_scheduler-api/packages/domain => ./../../pack
 
 replace github.com/aokuyama/circle_scheduler-api/packages/application => ./../../packages/application
 
-replace github.com/aokuyama/circle_scheduler-api/packages/infra => ./../../packages/infra
+replace github.com/aokuyama/circle_scheduler-api/packages/infrastructure => ./../../packages/infrastructure
 
 require (
 	github.com/aokuyama/circle_scheduler-api/packages/application v0.0.0-00010101000000-000000000000
 	github.com/aokuyama/circle_scheduler-api/packages/domain v0.0.0-00010101000000-000000000000
-	github.com/aokuyama/circle_scheduler-api/packages/infra v0.0.0-00010101000000-000000000000
+	github.com/aokuyama/circle_scheduler-api/packages/infrastructure v0.0.0-00010101000000-000000000000
 	github.com/spf13/cobra v1.7.0
 )
 
