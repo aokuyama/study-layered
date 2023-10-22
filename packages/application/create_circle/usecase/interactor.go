@@ -1,8 +1,11 @@
 package usecase
 
 import (
+	"errors"
+
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner/collection"
 )
 
 type createCircleInteractor struct {
@@ -28,10 +31,20 @@ func (u *createCircleInteractor) Invoke(i *CreateCircleInput) (*CreateCircleOutp
 		return nil, err
 	}
 
+	cl, err := u.circleRepository.SearchByOwner(ownerID)
+	if err != nil {
+		panic(err)
+	}
+	cc := collection.NewOwnerCircles(*cl)
+	if !cc.IsAppendable() {
+		return nil, errors.New("unable to append circle")
+	}
+
 	c, err := u.circleFactory.Create(ownerID, &i.CircleName)
 	if err != nil {
 		return nil, err
 	}
+
 	err = u.circleRepository.Create(c)
 	if err != nil {
 		return nil, err

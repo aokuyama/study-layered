@@ -8,6 +8,7 @@ import (
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
 	mock_circle "github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle/.mock"
 	mock_owner "github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner/.mock"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/util"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
@@ -24,6 +25,8 @@ func TestInvoke(t *testing.T) {
 
 	cr := mock_circle.NewMockCircleRepository(ctrl)
 	cr.EXPECT().Create(gomock.Any()).Return(nil)
+	cs := []circle.CircleID{}
+	cr.EXPECT().SearchByOwner(gomock.Any()).Return(&cs, nil)
 
 	u := New(f, or, cr)
 	_, err := u.Invoke(&CreateCircleInput{OwnerID: "550e8400-e29b-41d4-a716-446655440000", CircleName: "circle"})
@@ -74,6 +77,8 @@ func TestCreateCircleError(t *testing.T) {
 	or.EXPECT().Find(gomock.Any()).Return(nil, nil)
 
 	cr := mock_circle.NewMockCircleRepository(ctrl)
+	cs := []circle.CircleID{}
+	cr.EXPECT().SearchByOwner(gomock.Any()).Return(&cs, nil)
 
 	u := New(f, or, cr)
 	out, err := u.Invoke(&CreateCircleInput{OwnerID: "550e8400-e29b-41d4-a716-446655440000"})
@@ -94,6 +99,8 @@ func TestCreateError(t *testing.T) {
 	or.EXPECT().Find(gomock.Any()).Return(nil, nil)
 
 	cr := mock_circle.NewMockCircleRepository(ctrl)
+	cs := []circle.CircleID{}
+	cr.EXPECT().SearchByOwner(gomock.Any()).Return(&cs, nil)
 	cr.EXPECT().Create(gomock.Any()).Return(errors.New("save error"))
 
 	u := New(f, or, cr)
@@ -101,5 +108,25 @@ func TestCreateError(t *testing.T) {
 
 	assert.Error(t, err)
 	assert.Equal(t, "save error", err.Error())
+	assert.Nil(t, out)
+}
+
+func TestUnableAppendError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	f := mock_circle.NewMockCircleFactory(ctrl)
+
+	or := mock_owner.NewMockOwnerRepository(ctrl)
+	or.EXPECT().Find(gomock.Any()).Return(nil, nil)
+
+	cr := mock_circle.NewMockCircleRepository(ctrl)
+	cs := []circle.CircleID{*util.PanicOr(circle.NewCircleID("550e8400-e29b-41d4-a716-446655440000"))}
+	cr.EXPECT().SearchByOwner(gomock.Any()).Return(&cs, nil)
+
+	u := New(f, or, cr)
+	out, err := u.Invoke(&CreateCircleInput{OwnerID: "550e8400-e29b-41d4-a716-446655440000", CircleName: "circle"})
+	assert.Error(t, err)
+	assert.Equal(t, "unable to append circle", err.Error())
 	assert.Nil(t, out)
 }

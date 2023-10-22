@@ -5,6 +5,7 @@ import (
 
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/common/path"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner"
 	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/prisma/db"
 )
 
@@ -55,4 +56,22 @@ func (r *CircleRepositoryPrisma) FindByPath(p *path.Path) (*circle.CircleEntity,
 		panic(err)
 	}
 	return c, nil
+}
+
+func (r *CircleRepositoryPrisma) SearchByOwner(i *owner.OwnerID) (*[]circle.CircleID, error) {
+	f, err := r.prisma.client().Circle.FindMany(
+		db.Circle.OwnerID.Equals(i.String()),
+	).Exec(r.prisma.ctx)
+	if err != nil {
+		return nil, err
+	}
+	cl := make([]circle.CircleID, len(f))
+	for i := range f {
+		ci, err := circle.NewCircleID(f[i].ID)
+		if err != nil {
+			panic(err)
+		}
+		cl[i] = *ci
+	}
+	return &cl, nil
 }
