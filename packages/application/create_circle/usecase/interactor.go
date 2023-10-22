@@ -1,21 +1,21 @@
 package usecase
 
 import (
-	"errors"
-
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner"
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner/collection"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner/specification"
 )
 
 type createCircleInteractor struct {
 	circleFactory    circle.CircleFactory
 	ownerRepository  owner.OwnerRepository
 	circleRepository circle.CircleRepository
+	circleSpec       specification.AppendableCircleSpec
 }
 
 func New(f circle.CircleFactory, or owner.OwnerRepository, cr circle.CircleRepository) CreateCircleUsecase {
-	u := createCircleInteractor{f, or, cr}
+	s := specification.NewAppendableCircleSpec(cr)
+	u := createCircleInteractor{f, or, cr, s}
 	return &u
 }
 
@@ -31,13 +31,9 @@ func (u *createCircleInteractor) Invoke(i *CreateCircleInput) (*CreateCircleOutp
 		return nil, err
 	}
 
-	cl, err := u.circleRepository.SearchByOwner(ownerID)
+	err = u.circleSpec.IsSatisfiedBy(ownerID)
 	if err != nil {
-		panic(err)
-	}
-	cc := collection.NewOwnerCircles(*cl)
-	if !cc.IsAppendable() {
-		return nil, errors.New("unable to append circle")
+		return nil, err
 	}
 
 	c, err := u.circleFactory.Create(ownerID, &i.CircleName)

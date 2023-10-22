@@ -1,14 +1,13 @@
-package usecase_test
+package usecase
 
 import (
 	"errors"
 	"testing"
 
-	. "github.com/aokuyama/circle_scheduler-api/packages/application/create_circle/usecase"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
 	mock_circle "github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle/.mock"
 	mock_owner "github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner/.mock"
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/util"
+	mock_specification "github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner/specification/.mock"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
@@ -25,10 +24,11 @@ func TestInvoke(t *testing.T) {
 
 	cr := mock_circle.NewMockCircleRepository(ctrl)
 	cr.EXPECT().Create(gomock.Any()).Return(nil)
-	cs := []circle.CircleID{}
-	cr.EXPECT().SearchByOwner(gomock.Any()).Return(&cs, nil)
 
-	u := New(f, or, cr)
+	s := mock_specification.NewMockAppendableCircleSpec(ctrl)
+	s.EXPECT().IsSatisfiedBy(gomock.Any()).Return(nil)
+
+	u := createCircleInteractor{f, or, cr, s}
 	_, err := u.Invoke(&CreateCircleInput{OwnerID: "550e8400-e29b-41d4-a716-446655440000", CircleName: "circle"})
 	assert.NoError(t, err)
 }
@@ -77,10 +77,11 @@ func TestCreateCircleError(t *testing.T) {
 	or.EXPECT().Find(gomock.Any()).Return(nil, nil)
 
 	cr := mock_circle.NewMockCircleRepository(ctrl)
-	cs := []circle.CircleID{}
-	cr.EXPECT().SearchByOwner(gomock.Any()).Return(&cs, nil)
 
-	u := New(f, or, cr)
+	s := mock_specification.NewMockAppendableCircleSpec(ctrl)
+	s.EXPECT().IsSatisfiedBy(gomock.Any()).Return(nil)
+
+	u := createCircleInteractor{f, or, cr, s}
 	out, err := u.Invoke(&CreateCircleInput{OwnerID: "550e8400-e29b-41d4-a716-446655440000"})
 
 	assert.Error(t, err)
@@ -99,11 +100,12 @@ func TestCreateError(t *testing.T) {
 	or.EXPECT().Find(gomock.Any()).Return(nil, nil)
 
 	cr := mock_circle.NewMockCircleRepository(ctrl)
-	cs := []circle.CircleID{}
-	cr.EXPECT().SearchByOwner(gomock.Any()).Return(&cs, nil)
 	cr.EXPECT().Create(gomock.Any()).Return(errors.New("save error"))
 
-	u := New(f, or, cr)
+	s := mock_specification.NewMockAppendableCircleSpec(ctrl)
+	s.EXPECT().IsSatisfiedBy(gomock.Any()).Return(nil)
+
+	u := createCircleInteractor{f, or, cr, s}
 	out, err := u.Invoke(&CreateCircleInput{OwnerID: "550e8400-e29b-41d4-a716-446655440000", CircleName: "circle"})
 
 	assert.Error(t, err)
@@ -121,10 +123,11 @@ func TestUnableAppendError(t *testing.T) {
 	or.EXPECT().Find(gomock.Any()).Return(nil, nil)
 
 	cr := mock_circle.NewMockCircleRepository(ctrl)
-	cs := []circle.CircleID{*util.PanicOr(circle.NewCircleID("550e8400-e29b-41d4-a716-446655440000"))}
-	cr.EXPECT().SearchByOwner(gomock.Any()).Return(&cs, nil)
 
-	u := New(f, or, cr)
+	s := mock_specification.NewMockAppendableCircleSpec(ctrl)
+	s.EXPECT().IsSatisfiedBy(gomock.Any()).Return(errors.New("unable to append circle"))
+
+	u := createCircleInteractor{f, or, cr, s}
 	out, err := u.Invoke(&CreateCircleInput{OwnerID: "550e8400-e29b-41d4-a716-446655440000", CircleName: "circle"})
 	assert.Error(t, err)
 	assert.Equal(t, "unable to append circle", err.Error())
