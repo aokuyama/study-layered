@@ -26,7 +26,7 @@ var createOwnerCmd = &cobra.Command{
 		if err != nil {
 			panic(err)
 		}
-		println(out.Owner.ID.String())
+		println(out.Owner.ID().String())
 		return nil
 	},
 }

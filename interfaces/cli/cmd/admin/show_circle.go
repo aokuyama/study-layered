@@ -29,8 +29,8 @@ var showCircleCmd = &cobra.Command{
 		if err != nil {
 			panic(err)
 		}
-		println(out.Circle.ID.String())
-		println(out.Circle.Name.String())
+		println(out.Circle.ID().String())
+		println(out.Circle.Name().String())
 		return nil
 	},
 }

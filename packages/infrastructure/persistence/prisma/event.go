@@ -8,16 +8,16 @@ import (
 	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/prisma/db"
 )
 
-type EventRepositoryPrisma struct {
-	prisma *Prisma
+type eventRepositoryPrisma struct {
+	prisma *prisma
 }
 
-func NewEventRepositoryPrisma(client *Prisma) *EventRepositoryPrisma {
-	r := EventRepositoryPrisma{client}
+func NewEventRepositoryPrisma(client *prisma) *eventRepositoryPrisma {
+	r := eventRepositoryPrisma{client}
 	return &r
 }
 
-func (r *EventRepositoryPrisma) Create(e *event.RegisterEvent) error {
+func (r *eventRepositoryPrisma) Create(e *event.RegisterEvent) error {
 	d := e.Path.Digest()
 	_, err := r.prisma.client().Event.CreateOne(
 		db.Event.ID.Set(e.ID.String()),
@@ -29,7 +29,7 @@ func (r *EventRepositoryPrisma) Create(e *event.RegisterEvent) error {
 	return err
 }
 
-func (r *EventRepositoryPrisma) FindByPath(p *path.Path) (*event.EventEntity, error) {
+func (r *eventRepositoryPrisma) FindByPath(p *path.Path) (*event.EventEntity, error) {
 	d := p.Digest()
 	f, err := r.prisma.client().Event.FindUnique(
 		db.Event.PathDigest.Equals(d[:]),

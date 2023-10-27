@@ -5,9 +5,9 @@ import (
 )
 
 type EventEntity struct {
-	ID       *EventID
-	CircleID *circle.CircleID
-	Name     *Name
+	id       EventID
+	circleID circle.CircleID
+	name     Name
 }
 
 func NewEventEntity(id *string, circleID *string, name *string) (*EventEntity, error) {
@@ -24,10 +24,20 @@ func NewEventEntity(id *string, circleID *string, name *string) (*EventEntity, e
 		return nil, err
 	}
 
-	e := EventEntity{i, c, n}
+	e := EventEntity{*i, *c, *n}
 	return &e, nil
 }
 
+func (e *EventEntity) ID() *EventID {
+	return &e.id
+}
+func (e *EventEntity) CircleID() *circle.CircleID {
+	return &e.circleID
+}
+func (e *EventEntity) Name() *Name {
+	return &e.name
+}
+
 func (en *EventEntity) Identical(e *EventEntity) bool {
-	return en.ID.Equals(e.ID.UUID)
+	return en.ID().Equals(e.ID().UUID)
 }

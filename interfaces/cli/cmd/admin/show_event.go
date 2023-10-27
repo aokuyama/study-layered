@@ -29,8 +29,8 @@ var showEventCmd = &cobra.Command{
 		if err != nil {
 			panic(err)
 		}
-		println(out.Event.ID.String())
-		println(out.Event.Name.String())
+		println(out.Event.ID().String())
+		println(out.Event.Name().String())
 		return nil
 	},
 }

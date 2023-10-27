@@ -5,9 +5,9 @@ import (
 )
 
 type CircleEntity struct {
-	ID      *CircleID
-	OwnerID *owner.OwnerID
-	Name    *Name
+	id      CircleID
+	ownerID owner.OwnerID
+	name    Name
 }
 
 func NewCircleEntity(id *string, ownerID *string, name *string) (*CircleEntity, error) {
@@ -24,10 +24,20 @@ func NewCircleEntity(id *string, ownerID *string, name *string) (*CircleEntity, 
 		return nil, err
 	}
 
-	c := CircleEntity{i, o, n}
+	c := CircleEntity{*i, *o, *n}
 	return &c, nil
 }
 
+func (e *CircleEntity) ID() *CircleID {
+	return &e.id
+}
+func (e *CircleEntity) OwnerID() *owner.OwnerID {
+	return &e.ownerID
+}
+func (e *CircleEntity) Name() *Name {
+	return &e.name
+}
+
 func (e *CircleEntity) Identical(c *CircleEntity) bool {
-	return e.ID.Equals(c.ID.UUID)
+	return e.ID().Equals(c.ID().UUID)
 }

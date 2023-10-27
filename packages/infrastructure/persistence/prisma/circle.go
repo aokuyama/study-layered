@@ -9,16 +9,16 @@ import (
 	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/prisma/db"
 )
 
-type CircleRepositoryPrisma struct {
-	prisma *Prisma
+type circleRepositoryPrisma struct {
+	prisma *prisma
 }
 
-func NewCircleRepositoryPrisma(client *Prisma) *CircleRepositoryPrisma {
-	r := CircleRepositoryPrisma{client}
+func NewCircleRepositoryPrisma(client *prisma) *circleRepositoryPrisma {
+	r := circleRepositoryPrisma{client}
 	return &r
 }
 
-func (r *CircleRepositoryPrisma) Create(c *circle.RegisterCircle) error {
+func (r *circleRepositoryPrisma) Create(c *circle.RegisterCircle) error {
 	d := c.Path.Digest()
 	_, err := r.prisma.client().Circle.CreateOne(
 		db.Circle.ID.Set(c.ID.String()),
@@ -30,7 +30,7 @@ func (r *CircleRepositoryPrisma) Create(c *circle.RegisterCircle) error {
 	return err
 }
 
-func (r *CircleRepositoryPrisma) Find(i *circle.CircleID) (*circle.CircleEntity, error) {
+func (r *circleRepositoryPrisma) Find(i *circle.CircleID) (*circle.CircleEntity, error) {
 	f, err := r.prisma.client().Circle.FindUnique(db.Circle.ID.Equals(i.String())).Exec(r.prisma.ctx)
 	if err != nil {
 		return nil, fmt.Errorf("not found\n%w", err)
@@ -42,7 +42,7 @@ func (r *CircleRepositoryPrisma) Find(i *circle.CircleID) (*circle.CircleEntity,
 	return c, nil
 }
 
-func (r *CircleRepositoryPrisma) FindByPath(p *path.Path) (*circle.CircleEntity, error) {
+func (r *circleRepositoryPrisma) FindByPath(p *path.Path) (*circle.CircleEntity, error) {
 	d := p.Digest()
 	f, err := r.prisma.client().Circle.FindUnique(
 		db.Circle.PathDigest.Equals(d[:]),
@@ -58,7 +58,7 @@ func (r *CircleRepositoryPrisma) FindByPath(p *path.Path) (*circle.CircleEntity,
 	return c, nil
 }
 
-func (r *CircleRepositoryPrisma) SearchByOwner(i *owner.OwnerID) (*[]circle.CircleID, error) {
+func (r *circleRepositoryPrisma) SearchByOwner(i *owner.OwnerID) (*[]circle.CircleID, error) {
 	f, err := r.prisma.client().Circle.FindMany(
 		db.Circle.OwnerID.Equals(i.String()),
 	).Exec(r.prisma.ctx)

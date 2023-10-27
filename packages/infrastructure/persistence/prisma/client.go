@@ -7,18 +7,18 @@ import (
 	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/prisma/db"
 )
 
-type Prisma struct {
+type prisma struct {
 	_client *db.PrismaClient
 	ctx     context.Context
 }
 
-func NewPrismaClient() (*Prisma, error) {
+func NewPrismaClient() (*prisma, error) {
 	ctx := context.Background()
-	c := Prisma{nil, ctx}
+	c := prisma{nil, ctx}
 	return &c, nil
 }
 
-func (p *Prisma) client() *db.PrismaClient {
+func (p *prisma) client() *db.PrismaClient {
 	if p._client != nil {
 		return p._client
 	}
@@ -30,7 +30,7 @@ func (p *Prisma) client() *db.PrismaClient {
 	return p._client
 }
 
-func (p *Prisma) Disconnect() {
+func (p *prisma) Disconnect() {
 	if p._client == nil {
 		return
 	}
