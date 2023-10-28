@@ -10,14 +10,21 @@ import (
 )
 
 func TestPath(t *testing.T) {
-	var v *Path
-	var err error
-	v, err = NewPath("sIjjw9WlCa22hVfb")
-	assert.Equal(t, "*****", v.String())
-	assert.NoError(t, err)
-	v, err = NewPath("d8D83ffde48bcs74")
-	assert.Equal(t, "*****", v.String())
-	assert.NoError(t, err)
+	tests := []struct {
+		name string
+		path string
+	}{
+		{"1", "sIjjw9WlCa22hVfb"},
+		{"2", "d8D83ffde48bcs74"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			v, err := NewPath(tt.path)
+			assert.Equal(t, "*****", v.String())
+			assert.NoError(t, err)
+		})
+	}
 }
 
 func TestErrorPath(t *testing.T) {
@@ -95,4 +102,43 @@ func TestPanicDigest(t *testing.T) {
 		}
 	}()
 	p.Digest()
+}
+
+func TestEncrypt(t *testing.T) {
+	os.Setenv("KEY_PATH", "1234567890abcdef")
+
+	tests := []struct {
+		name string
+		path string
+	}{
+		{"1", "sIjjw9WlCa22hVfb"},
+		{"2", "d8D83ffde48bcs74"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p1, _ := NewPath(tt.path)
+			e1, err := p1.Encrypt()
+			assert.NoError(t, err)
+			p1_2, err := DecryptPath(e1)
+			assert.NoError(t, err)
+			assert.Equal(t, tt.path, p1_2.RawValue())
+		})
+	}
+}
+
+func TestErrorEncrypt(t *testing.T) {
+	os.Setenv("KEY_PATH", "")
+
+	p, _ := NewPath("sIjjw9WlCa22hVfb")
+
+	e1, err := p.Encrypt()
+	assert.Nil(t, e1)
+	assert.Error(t, err)
+	assert.Equal(t, "KEY_PATH", err.Error())
+
+	e2, err := DecryptPath(&Encrypted{})
+	assert.Nil(t, e2)
+	assert.Error(t, err)
+	assert.Equal(t, "KEY_PATH", err.Error())
 }

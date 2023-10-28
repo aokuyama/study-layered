@@ -52,6 +52,28 @@ func (v *Path) Digest() [32]byte {
 	return sha256.Sum256(s)
 }
 
+func (v *Path) Encrypt() (*Encrypted, error) {
+	k := os.Getenv("KEY_PATH")
+	if len(k) < 1 {
+		return nil, errors.New("KEY_PATH")
+	}
+	return encrypt(v.value, k)
+}
+
+func DecryptPath(e *Encrypted) (*Path, error) {
+	k := os.Getenv("KEY_PATH")
+	if len(k) < 1 {
+		return nil, errors.New("KEY_PATH")
+	}
+
+	p, err := decrypt(e, k)
+
+	if err != nil {
+		return nil, err
+	}
+	return NewPath(*p)
+}
+
 func (v *Path) Equals(p *Path) bool {
 	return v.value == p.value
 }
