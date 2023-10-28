@@ -31,6 +31,7 @@ var showEventCmd = &cobra.Command{
 		}
 		println(out.Event.ID().String())
 		println(out.Event.Name().String())
+		println(out.Event.Path().RawValue())
 		return nil
 	},
 }

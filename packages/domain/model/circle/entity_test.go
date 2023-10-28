@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	. "github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/common/path"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/util"
 
 	"github.com/stretchr/testify/assert"
@@ -15,8 +16,9 @@ func TestNewEntity(t *testing.T) {
 	i := "26f90f21-dd19-4df1-81ff-ea9dcbcf03d1"
 	o := "d833a112-95e8-4042-ab02-ffde48bc874a"
 	n := "circle"
+	p := path.Path{}
 
-	e, err = NewCircleEntity(&i, &o, &n)
+	e, err = NewCircleEntity(&i, &o, &n, &p)
 	assert.Equal(t, "26f90f21-dd19-4df1-81ff-ea9dcbcf03d1", e.ID().String())
 	assert.Equal(t, "d833a112-95e8-4042-ab02-ffde48bc874a", e.OwnerID().String())
 	assert.Equal(t, "circle", e.Name().String())
@@ -35,7 +37,8 @@ func TestErrorNewEntity(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.testName, func(t *testing.T) {
-			e, err := NewCircleEntity(&tt.id, &tt.ownerID, &tt.name)
+			p := path.Path{}
+			e, err := NewCircleEntity(&tt.id, &tt.ownerID, &tt.name, &p)
 			assert.Nil(t, e)
 			assert.Error(t, err)
 		})
@@ -47,9 +50,10 @@ func TestIdenticalEntity(t *testing.T) {
 	i1 := "26f90f21-dd19-4df1-81ff-ea9dcbcf03d1"
 	i2 := "550e8400-e29b-41d4-a716-446655440000"
 	oi := "d833a112-95e8-4042-ab02-ffde48bc874a"
-	e1 := util.PanicOr(NewCircleEntity(&i1, &oi, &n))
-	e2 := util.PanicOr(NewCircleEntity(&i1, &oi, &n))
-	e3 := util.PanicOr(NewCircleEntity(&i2, &oi, &n))
+	p := path.Path{}
+	e1 := util.PanicOr(NewCircleEntity(&i1, &oi, &n, &p))
+	e2 := util.PanicOr(NewCircleEntity(&i1, &oi, &n, &p))
+	e3 := util.PanicOr(NewCircleEntity(&i2, &oi, &n, &p))
 	assert.True(t, e1.Identical(e2))
 	assert.False(t, e1.Identical(e3))
 }

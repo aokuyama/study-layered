@@ -41,7 +41,16 @@ func (r *circleRepositoryPrisma) Find(i *circle.CircleID) (*circle.CircleEntity,
 	if err != nil {
 		return nil, fmt.Errorf("not found\n%w", err)
 	}
-	c, err := circle.NewCircleEntity(&f.ID, &f.OwnerID, &f.Name)
+	en := path.Encrypted{
+		Data: f.Path,
+		Iv:   f.PathIv,
+	}
+	path, err := path.DecryptPath(&en)
+	if err != nil {
+		panic(err)
+	}
+
+	c, err := circle.NewCircleEntity(&f.ID, &f.OwnerID, &f.Name, path)
 	if err != nil {
 		panic(err)
 	}
@@ -57,7 +66,16 @@ func (r *circleRepositoryPrisma) FindByPath(p *path.Path) (*circle.CircleEntity,
 		return nil, fmt.Errorf("not found\n%w", err)
 	}
 
-	c, err := circle.NewCircleEntity(&f.ID, &f.OwnerID, &f.Name)
+	en := path.Encrypted{
+		Data: f.Path,
+		Iv:   f.PathIv,
+	}
+	p2, err := path.DecryptPath(&en)
+	if err != nil {
+		panic(err)
+	}
+
+	c, err := circle.NewCircleEntity(&f.ID, &f.OwnerID, &f.Name, p2)
 	if err != nil {
 		panic(err)
 	}

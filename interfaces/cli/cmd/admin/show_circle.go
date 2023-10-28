@@ -31,6 +31,7 @@ var showCircleCmd = &cobra.Command{
 		}
 		println(out.Circle.ID().String())
 		println(out.Circle.Name().String())
+		println(out.Circle.Path().RawValue())
 		return nil
 	},
 }

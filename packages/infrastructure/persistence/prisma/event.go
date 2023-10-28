@@ -44,11 +44,20 @@ func (r *eventRepositoryPrisma) FindByPath(p *path.Path) (*event.EventEntity, er
 	if err != nil {
 		return nil, fmt.Errorf("not found\n%w", err)
 	}
+	en := path.Encrypted{
+		Data: f.Path,
+		Iv:   f.PathIv,
+	}
+	p2, err := path.DecryptPath(&en)
+	if err != nil {
+		panic(err)
+	}
 
 	e, err := event.NewEventEntity(
 		&f.ID,
 		&f.CircleID,
 		&f.Name,
+		p2,
 	)
 	if err != nil {
 		panic(err)
