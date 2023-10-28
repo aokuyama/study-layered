@@ -11,6 +11,7 @@ services:
     environment:
       - TZ=${TZ:-}
       - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres?schema=public&connect_timeout=10
+      - PEPPER_PATH=${PEPPER_PATH:-dummy}
   db:
     image: postgres:15.4-bullseye
     ports:

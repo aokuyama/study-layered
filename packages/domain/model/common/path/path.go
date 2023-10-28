@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"errors"
+	"os"
 	"regexp"
 	"unicode/utf8"
 )
@@ -43,7 +44,12 @@ func (v *Path) RawValue() string {
 }
 
 func (v *Path) Digest() [32]byte {
-	return sha256.Sum256([]byte(v.value))
+	p := os.Getenv("PEPPER_PATH")
+	if len(p) < 1 {
+		panic("PEPPER_PATH")
+	}
+	s := []byte(p + v.value)
+	return sha256.Sum256(s)
 }
 
 func (v *Path) Equals(p *Path) bool {
