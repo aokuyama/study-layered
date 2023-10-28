@@ -13,7 +13,7 @@ func TestFactory(t *testing.T) {
 	var ownerID owner.OwnerID
 	n := "circle"
 	e, err := CircleFactoryImpl{}.Create(&ownerID, &n)
-	assert.Equal(t, 36, len(e.ID.String()))
-	assert.Equal(t, "circle", e.Name.String())
+	assert.Equal(t, 36, len(e.ID().String()))
+	assert.Equal(t, "circle", e.Name().String())
 	assert.NoError(t, err)
 }

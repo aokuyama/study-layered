@@ -8,12 +8,12 @@ import (
 )
 
 type CircleFactory interface {
-	Create(ownerID *owner.OwnerID, name *string) (*RegisterCircle, error)
+	Create(ownerID *owner.OwnerID, name *string) (*CircleEntity, error)
 }
 
 type CircleFactoryImpl struct{}
 
-func (f CircleFactoryImpl) Create(ownerID *owner.OwnerID, name *string) (*RegisterCircle, error) {
+func (f CircleFactoryImpl) Create(ownerID *owner.OwnerID, name *string) (*CircleEntity, error) {
 	n, err := NewName(*name)
 	if err != nil {
 		return nil, err
@@ -27,5 +27,5 @@ func (f CircleFactoryImpl) Create(ownerID *owner.OwnerID, name *string) (*Regist
 	if err != nil {
 		return nil, err
 	}
-	return newRegisterCircle(&i, ownerID, n, p)
+	return &CircleEntity{i, *ownerID, *n, *p}, nil
 }

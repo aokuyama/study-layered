@@ -11,11 +11,9 @@ import (
 
 func TestFactory(t *testing.T) {
 	var circleID circle.CircleID
-	var e *RegisterEvent
-	var err error
 	n := "event"
-	e, err = EventFactoryImpl{}.Create(&circleID, &n)
-	assert.Equal(t, 36, len(e.ID.String()))
-	assert.Equal(t, "event", e.Name.String())
+	e, err := EventFactoryImpl{}.Create(&circleID, &n)
+	assert.Equal(t, 36, len(e.ID().String()))
+	assert.Equal(t, "event", e.Name().String())
 	assert.NoError(t, err)
 }

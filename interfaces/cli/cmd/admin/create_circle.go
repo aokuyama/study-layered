@@ -34,8 +34,8 @@ var createCircleCmd = &cobra.Command{
 		if err != nil {
 			panic(err)
 		}
-		println(out.Circle.ID.String())
-		println(out.Circle.Path.RawValue())
+		println(out.Circle.ID().String())
+		println(out.Circle.Path().RawValue())
 		return nil
 	},
 }

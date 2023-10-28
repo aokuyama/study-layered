@@ -7,7 +7,7 @@ import (
 )
 
 type CircleRepository interface {
-	Create(*RegisterCircle) error
+	Create(*CircleEntity) error
 	Find(*CircleID) (*CircleEntity, error)
 	FindByPath(*path.Path) (*CircleEntity, error)
 	SearchByOwner(*owner.OwnerID) (*[]CircleID, error)

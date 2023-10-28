@@ -17,20 +17,20 @@ func NewEventRepositoryPrisma(client *prisma) *eventRepositoryPrisma {
 	return &r
 }
 
-func (r *eventRepositoryPrisma) Create(e *event.RegisterEvent) error {
-	d := e.Path.Digest()
-	en, err := e.Path.Encrypt()
+func (r *eventRepositoryPrisma) Create(e *event.EventEntity) error {
+	d := e.Path().Digest()
+	en, err := e.Path().Encrypt()
 	if err != nil {
 		return err
 	}
 
 	_, err = r.prisma.client().Event.CreateOne(
-		db.Event.ID.Set(e.ID.String()),
+		db.Event.ID.Set(e.ID().String()),
 		db.Event.PathDigest.Set(d[:]),
 		db.Event.Path.Set(en.Data),
 		db.Event.PathIv.Set(en.Iv),
-		db.Event.Name.Set(e.Name.String()),
-		db.Event.Circle.Link(db.Circle.ID.Set(e.CircleID.String())),
+		db.Event.Name.Set(e.Name().String()),
+		db.Event.Circle.Link(db.Circle.ID.Set(e.CircleID().String())),
 	).Exec(r.prisma.ctx)
 
 	return err

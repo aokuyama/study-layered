@@ -34,8 +34,8 @@ var createEventCmd = &cobra.Command{
 		if err != nil {
 			panic(err)
 		}
-		println(out.Event.ID.String())
-		println(out.Event.Path.RawValue())
+		println(out.Event.ID().String())
+		println(out.Event.Path().RawValue())
 		return nil
 	},
 }

@@ -17,7 +17,7 @@ func TestInvoke(t *testing.T) {
 	defer ctrl.Finish()
 
 	f := mock_event.NewMockEventFactory(ctrl)
-	f.EXPECT().Create(gomock.Any(), gomock.Any()).Return(&event.RegisterEvent{}, nil)
+	f.EXPECT().Create(gomock.Any(), gomock.Any()).Return(&event.EventEntity{}, nil)
 
 	or := mock_circle.NewMockCircleRepository(ctrl)
 	or.EXPECT().Find(gomock.Any()).Return(nil, nil)
@@ -88,7 +88,7 @@ func TestCreateError(t *testing.T) {
 	defer ctrl.Finish()
 
 	f := mock_event.NewMockEventFactory(ctrl)
-	f.EXPECT().Create(gomock.Any(), gomock.Any()).Return(&event.RegisterEvent{}, nil)
+	f.EXPECT().Create(gomock.Any(), gomock.Any()).Return(&event.EventEntity{}, nil)
 
 	or := mock_circle.NewMockCircleRepository(ctrl)
 	or.EXPECT().Find(gomock.Any()).Return(nil, nil)
