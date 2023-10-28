@@ -20,9 +20,15 @@ func NewCircleRepositoryPrisma(client *prisma) *circleRepositoryPrisma {
 
 func (r *circleRepositoryPrisma) Create(c *circle.RegisterCircle) error {
 	d := c.Path.Digest()
-	_, err := r.prisma.client().Circle.CreateOne(
+	en, err := c.Path.Encrypt()
+	if err != nil {
+		return err
+	}
+	_, err = r.prisma.client().Circle.CreateOne(
 		db.Circle.ID.Set(c.ID.String()),
 		db.Circle.PathDigest.Set(d[:]),
+		db.Circle.Path.Set(en.Data),
+		db.Circle.PathIv.Set(en.Iv),
 		db.Circle.Name.Set(c.Name.String()),
 		db.Circle.Owner.Link(db.Owner.ID.Set(c.OwnerID.String())),
 	).Exec(r.prisma.ctx)

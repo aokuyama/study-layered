@@ -8,6 +8,8 @@ CREATE TABLE "circle" (
     "id" TEXT NOT NULL,
     "owner_id" TEXT NOT NULL,
     "path_digest" BYTEA NOT NULL,
+    "path" BYTEA NOT NULL,
+    "path_iv" BYTEA NOT NULL,
     "name" TEXT NOT NULL
 );
 
@@ -16,6 +18,8 @@ CREATE TABLE "event" (
     "id" TEXT NOT NULL,
     "circle_id" TEXT NOT NULL,
     "path_digest" BYTEA NOT NULL,
+    "path" BYTEA NOT NULL,
+    "path_iv" BYTEA NOT NULL,
     "name" TEXT NOT NULL
 );
 
