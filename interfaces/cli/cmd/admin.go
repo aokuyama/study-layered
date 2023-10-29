@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/aokuyama/circle_scheduler-api/apps/cli/cmd/admin"
+	"github.com/aokuyama/circle_scheduler-api/interfaces/cli/cmd/admin"
 	"github.com/spf13/cobra"
 )
 

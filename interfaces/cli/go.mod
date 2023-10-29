@@ -1,4 +1,4 @@
-module github.com/aokuyama/circle_scheduler-api/apps/cli
+module github.com/aokuyama/circle_scheduler-api/interfaces/cli
 
 go 1.21
 

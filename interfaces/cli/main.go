@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/aokuyama/circle_scheduler-api/apps/cli/cmd"
+	"github.com/aokuyama/circle_scheduler-api/interfaces/cli/cmd"
 	"github.com/spf13/cobra"
 )
 
