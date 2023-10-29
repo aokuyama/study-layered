@@ -4,9 +4,12 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"errors"
+	"fmt"
 	"os"
 	"regexp"
 	"unicode/utf8"
+
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/errs"
 )
 
 type Path struct {
@@ -18,10 +21,10 @@ var reg = regexp.MustCompile("[0-9A-Za-z]{16}$")
 func NewPath(v string) (*Path, error) {
 	c := utf8.RuneCountInString(v)
 	if c != 16 {
-		return nil, errors.New("must 16 characters")
+		return nil, fmt.Errorf("%w must 16 characters", errs.ErrBadParam)
 	}
 	if !reg.MatchString(v) {
-		return nil, errors.New("alphanumeric only")
+		return nil, fmt.Errorf("%w alphanumeric only", errs.ErrBadParam)
 	}
 	p := Path{v}
 	return &p, nil

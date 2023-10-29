@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/common/path"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/errs"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/event"
 	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/prisma/db"
 )
@@ -42,7 +43,7 @@ func (r *eventRepositoryPrisma) FindByPath(p *path.Path) (*event.EventEntity, er
 		db.Event.PathDigest.Equals(d[:]),
 	).Exec(r.prisma.ctx)
 	if err != nil {
-		return nil, fmt.Errorf("not found\n%w", err)
+		return nil, fmt.Errorf("%w %w", errs.ErrNotFound, err)
 	}
 	en := path.Encrypted{
 		Data: f.Path,

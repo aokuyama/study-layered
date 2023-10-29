@@ -1,9 +1,11 @@
 package event
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/aokuyama/circle_scheduler-api/packages/application/show_event/usecase"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/errs"
 	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/persistence/prisma"
 	"github.com/gin-gonic/gin"
 )
@@ -25,6 +27,18 @@ func FetchEvent(c *gin.Context) {
 	u := usecase.New(cr)
 	out, err := u.Invoke(&i)
 	if err != nil {
+		if errors.Is(err, errs.ErrBadParam) {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"msg": "bad request",
+			})
+			return
+		}
+		if errors.Is(err, errs.ErrNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{
+				"msg": "not found",
+			})
+			return
+		}
 		panic(err)
 	}
 

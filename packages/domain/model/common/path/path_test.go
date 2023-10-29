@@ -1,10 +1,12 @@
 package path_test
 
 import (
+	"errors"
 	"os"
 	"testing"
 
 	. "github.com/aokuyama/circle_scheduler-api/packages/domain/model/common/path"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/errs"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -33,12 +35,15 @@ func TestErrorPath(t *testing.T) {
 	v, err = NewPath("sIjjw9WlCa22hVf")
 	assert.Nil(t, v)
 	assert.Error(t, err)
+	assert.True(t, errors.Is(err, errs.ErrBadParam))
 	v, err = NewPath("sIjjw9WlCa22hVb12")
 	assert.Nil(t, v)
 	assert.Error(t, err)
+	assert.True(t, errors.Is(err, errs.ErrBadParam))
 	v, err = NewPath("")
 	assert.Nil(t, v)
 	assert.Error(t, err, "deny empty")
+	assert.True(t, errors.Is(err, errs.ErrBadParam))
 }
 
 func TestPathErrorChar(t *testing.T) {
