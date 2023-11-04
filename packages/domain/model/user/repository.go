@@ -2,8 +2,7 @@
 package user
 
 type UserRepository interface {
-	Save(*User) error
-	Find(*UserID) (*User, error)
+	Create(*UserWithPassword) error
 }
 
 type UserAuthRepository interface {

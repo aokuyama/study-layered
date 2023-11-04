@@ -16,7 +16,7 @@ type Path struct {
 	value string
 }
 
-var reg = regexp.MustCompile("[0-9A-Za-z]{16}$")
+var reg = regexp.MustCompile("^[0-9A-Za-z]{16}$")
 
 func NewPath(v string) (*Path, error) {
 	c := utf8.RuneCountInString(v)

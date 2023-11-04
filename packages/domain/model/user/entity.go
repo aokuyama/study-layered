@@ -3,6 +3,10 @@ package user
 type User struct {
 	id UserID
 }
+type UserWithPassword struct {
+	User     User
+	Password Password
+}
 
 func NewUser(id *UserID) (*User, error) {
 	c := User{*id}
