@@ -6,6 +6,7 @@ import (
 
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
 	mock_circle "github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle/.mock"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/errs"
 	mock_owner "github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner/.mock"
 	mock_specification "github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner/specification/.mock"
 	"github.com/stretchr/testify/assert"
@@ -45,7 +46,7 @@ func TestOwnerIDInputError(t *testing.T) {
 	out, err := u.Invoke(&CreateCircleInput{CircleName: "circle"})
 
 	assert.Error(t, err)
-	assert.Equal(t, "invalid UUID length: 0", err.Error())
+	assert.True(t, errors.Is(err, errs.ErrBadParam))
 	assert.Nil(t, out)
 }
 

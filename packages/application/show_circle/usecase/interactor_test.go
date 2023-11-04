@@ -7,6 +7,7 @@ import (
 	. "github.com/aokuyama/circle_scheduler-api/packages/application/show_circle/usecase"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
 	mock_circle "github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle/.mock"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/errs"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
@@ -34,7 +35,8 @@ func TestPathInputError(t *testing.T) {
 	u := New(cr)
 	out, err := u.Invoke(&ShowCircleInput{Path: "invalid"})
 
-	assert.Equal(t, "must 16 characters", err.Error())
+	assert.Error(t, err)
+	assert.True(t, errors.Is(err, errs.ErrBadParam))
 	assert.Nil(t, out)
 }
 

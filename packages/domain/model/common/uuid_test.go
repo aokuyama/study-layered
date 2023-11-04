@@ -1,9 +1,11 @@
 package common_test
 
 import (
+	"errors"
 	"testing"
 
 	. "github.com/aokuyama/circle_scheduler-api/packages/domain/model/common"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/errs"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -25,7 +27,9 @@ func TestErrorUUID(t *testing.T) {
 	v, err = NewUUID("abc")
 	assert.Nil(t, v)
 	assert.Error(t, err, "deny not uuid string")
+	assert.True(t, errors.Is(err, errs.ErrBadParam))
 	v, err = NewUUID("")
 	assert.Nil(t, v)
 	assert.Error(t, err, "deny empty")
+	assert.True(t, errors.Is(err, errs.ErrBadParam))
 }

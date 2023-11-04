@@ -5,3 +5,8 @@ type UserRepository interface {
 	Save(*User) error
 	Find(*UserID) (*User, error)
 }
+
+type UserAuthRepository interface {
+	CreateToken(*UserID) (*AuthToken, error)
+	AuthByToken(*UserID, *AuthToken) error
+}

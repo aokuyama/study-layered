@@ -1,13 +1,18 @@
 package common
 
-import "github.com/google/uuid"
+import (
+	"fmt"
+
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/errs"
+	"github.com/google/uuid"
+)
 
 type UUID string
 
 func NewUUID(v string) (*UUID, error) {
 	_, err := uuid.Parse(v)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w: %w", errs.ErrBadParam, err)
 	}
 	i := UUID(v)
 	return &i, nil

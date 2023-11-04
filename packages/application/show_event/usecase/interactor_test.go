@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	. "github.com/aokuyama/circle_scheduler-api/packages/application/show_event/usecase"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/errs"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/event"
 	mock_event "github.com/aokuyama/circle_scheduler-api/packages/domain/model/event/.mock"
 	"github.com/stretchr/testify/assert"
@@ -34,7 +35,8 @@ func TestPathInputError(t *testing.T) {
 	u := New(cr)
 	out, err := u.Invoke(&ShowEventInput{Path: "invalid"})
 
-	assert.Equal(t, "must 16 characters", err.Error())
+	assert.Error(t, err)
+	assert.True(t, errors.Is(err, errs.ErrBadParam))
 	assert.Nil(t, out)
 }
 

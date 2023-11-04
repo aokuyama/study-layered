@@ -6,6 +6,7 @@ import (
 
 	. "github.com/aokuyama/circle_scheduler-api/packages/application/create_event/usecase"
 	mock_circle "github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle/.mock"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/errs"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/event"
 	mock_event "github.com/aokuyama/circle_scheduler-api/packages/domain/model/event/.mock"
 	"github.com/stretchr/testify/assert"
@@ -42,7 +43,7 @@ func TestCircleIDInputError(t *testing.T) {
 	out, err := u.Invoke(&CreateEventInput{EventName: "event"})
 
 	assert.Error(t, err)
-	assert.Equal(t, "invalid UUID length: 0", err.Error())
+	assert.True(t, errors.Is(err, errs.ErrBadParam))
 	assert.Nil(t, out)
 }
 
