@@ -7,5 +7,5 @@ type UserRepository interface {
 
 type UserAuthRepository interface {
 	CreateToken(*UserID) (*AuthToken, error)
-	AuthByToken(*UserID, *AuthToken) error
+	AuthByToken(*AuthToken) (*UserID, error)
 }

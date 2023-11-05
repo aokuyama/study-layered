@@ -5,7 +5,9 @@ import (
 	"os"
 	"time"
 
+	"github.com/aokuyama/circle_scheduler-api/interfaces/http/middleware"
 	"github.com/aokuyama/circle_scheduler-api/interfaces/http/route/event"
+	"github.com/aokuyama/circle_scheduler-api/interfaces/http/route/user"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -44,6 +46,11 @@ func main() {
 			"status": "OK",
 		})
 	})
+	v1user := g.Group("/v1/user")
+	v1user.Use(middleware.AuthMiddleware)
+	{
+		v1user.GET("me", user.Me)
+	}
 	g.GET("/v1/event/:path", event.FetchEvent)
 	g.Run(":3000")
 }

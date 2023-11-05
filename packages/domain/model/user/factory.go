@@ -9,7 +9,7 @@ type UserFactory interface {
 
 type UserFactoryImpl struct{}
 
-func (f UserFactoryImpl) Create(password *string) (*UserWithPassword, error) {
+func (f UserFactoryImpl) Create(password string) (*UserWithPassword, error) {
 	i, err := common.GenerateUUID()
 	if err != nil {
 		return nil, err
@@ -19,7 +19,7 @@ func (f UserFactoryImpl) Create(password *string) (*UserWithPassword, error) {
 	if err != nil {
 		return nil, err
 	}
-	p, err := NewPassword(*password)
+	p, err := NewPassword(password)
 	if err != nil {
 		return nil, err
 	}

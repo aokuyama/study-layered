@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"strconv"
 	"time"
@@ -18,18 +19,22 @@ func NewJwt() *JwtClient {
 }
 
 func (c *JwtClient) CreateToken(i *user.UserID) (*user.AuthToken, error) {
-	tokenString, err := GenerateToken(i.String())
+	tokenString, err := generateToken(i.String())
 	if err != nil {
 		return nil, err
 	}
 	return user.NewAuthToken(*tokenString)
 }
 
-func (c *JwtClient) AuthByToken(i *user.UserID, t *user.AuthToken) error {
-	return errors.New("unimplemented")
+func (c *JwtClient) AuthByToken(t *user.AuthToken) (*user.UserID, error) {
+	id, err := parseToken(t.String())
+	if err != nil {
+		return nil, err
+	}
+	return user.NewUserID(*id)
 }
 
-func GenerateToken(id string) (*string, error) {
+func generateToken(id string) (*string, error) {
 	secretKey := os.Getenv("JWT_SECRET_KEY")
 	if len(secretKey) <= 0 {
 		panic("JWT_SECRET_KEY")
@@ -49,4 +54,26 @@ func GenerateToken(id string) (*string, error) {
 		return nil, err
 	}
 	return &tokenString, nil
+}
+
+func parseToken(tokenString string) (*string, error) {
+	secretKey := os.Getenv("JWT_SECRET_KEY")
+	if len(secretKey) <= 0 {
+		panic("JWT_SECRET_KEY")
+	}
+
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return []byte(secretKey), nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		i := claims["id"].(string)
+		return &i, nil
+	}
+	return nil, errors.New("token invalid")
 }
