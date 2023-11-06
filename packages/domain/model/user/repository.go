@@ -4,6 +4,7 @@ package user
 type UserRepository interface {
 	Create(*UserWithPassword) error
 	Find(*UserID) (*User, error)
+	FindWithPasswordAuth(*UserID, *Password) (*User, error)
 }
 
 type UserAuthRepository interface {

@@ -50,16 +50,6 @@ func TestPasswordErrorChar(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func TestRawValue(t *testing.T) {
-	var err error
-	v1, err := NewPassword("sIjjw9WlCa22hVfb")
-	assert.Equal(t, "sIjjw9WlCa22hVfb", v1.RawValue())
-	assert.NoError(t, err)
-	v2, err := NewPassword("d8D83ffde48bcs74")
-	assert.Equal(t, "d8D83ffde48bcs74", v2.RawValue())
-	assert.NoError(t, err)
-}
-
 func TestDigest(t *testing.T) {
 	os.Setenv("PEPPER_PASSWORD", "pepper")
 

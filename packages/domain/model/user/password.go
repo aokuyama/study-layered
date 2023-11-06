@@ -32,10 +32,6 @@ func (v *Password) String() string {
 	return "*****"
 }
 
-func (v *Password) RawValue() string {
-	return v.value
-}
-
 func (v *Password) Digest() [32]byte {
 	p := os.Getenv("PEPPER_PASSWORD")
 	if len(p) < 1 {

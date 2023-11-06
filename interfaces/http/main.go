@@ -52,6 +52,7 @@ func main() {
 		v1user.GET("me", user.Me)
 	}
 	g.POST("/v1/user/signup", user.Signup)
+	g.POST("/v1/user/auth", user.Auth)
 	g.GET("/v1/event/:path", event.FetchEvent)
 	g.Run(":3000")
 }
