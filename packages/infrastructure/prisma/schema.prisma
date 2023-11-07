@@ -10,6 +10,7 @@ generator db {
 model user {
   id              String  @unique
   password_digest Bytes   @db.ByteA
+  password_salt   Bytes   @db.ByteA
   name            String?
 }
 

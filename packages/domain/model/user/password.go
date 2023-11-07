@@ -1,7 +1,9 @@
 package user
 
 import (
+	"crypto/rand"
 	"crypto/sha256"
+	"errors"
 	"fmt"
 	"os"
 	"regexp"
@@ -32,11 +34,35 @@ func (v *Password) String() string {
 	return "*****"
 }
 
-func (v *Password) Digest() [32]byte {
+func (v *Password) Digest(s *PasswordSalt) *[32]byte {
 	p := os.Getenv("PEPPER_PASSWORD")
 	if len(p) < 1 {
 		panic("PEPPER_PASSWORD")
 	}
-	s := []byte(p + v.value)
-	return sha256.Sum256(s)
+	str := []byte(p + v.value + s.String())
+	d := sha256.Sum256(str)
+	return &d
+}
+
+type PasswordSalt [32]byte
+
+func GenerateSalt() *PasswordSalt {
+	r, err := random()
+	if err != nil {
+		panic(err)
+	}
+	s := PasswordSalt(*r)
+	return &s
+}
+
+func (v *PasswordSalt) String() string {
+	return string(v[:])
+}
+
+func random() (*[32]byte, error) {
+	var b [32]byte
+	if _, err := rand.Read(b[:]); err != nil {
+		return nil, errors.New("unexpected error")
+	}
+	return &b, nil
 }

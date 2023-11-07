@@ -2,6 +2,7 @@
 CREATE TABLE "user" (
     "id" TEXT NOT NULL,
     "password_digest" BYTEA NOT NULL,
+    "password_salt" BYTEA NOT NULL,
     "name" TEXT
 );
 

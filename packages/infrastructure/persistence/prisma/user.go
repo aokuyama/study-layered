@@ -18,11 +18,13 @@ func NewUserRepositoryPrisma(client *prisma) *userRepositoryPrisma {
 }
 
 func (r *userRepositoryPrisma) Create(u *user.UserWithPassword) error {
-	d := u.Password.Digest()
+	s := user.GenerateSalt()
+	d := u.Password.Digest(s)
 
 	_, err := r.prisma.client().User.CreateOne(
 		db.User.ID.Set(u.User.ID().String()),
 		db.User.PasswordDigest.Set(d[:]),
+		db.User.PasswordSalt.Set(s[:]),
 	).Exec(r.prisma.ctx)
 	return err
 }
@@ -50,8 +52,8 @@ func (r *userRepositoryPrisma) FindWithPasswordAuth(i *user.UserID, p *user.Pass
 	if err != nil {
 		panic(err)
 	}
-
-	d := p.Digest()
+	s := user.PasswordSalt(f.PasswordSalt)
+	d := p.Digest(&s)
 	if string(f.PasswordDigest) != string(d[:]) {
 		return nil, errs.ErrUnauthorized
 	}
