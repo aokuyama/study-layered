@@ -50,6 +50,7 @@ func main() {
 	v1user.Use(middleware.AuthMiddleware)
 	{
 		v1user.GET("me", user.Me)
+		v1user.GET("refresh", user.Refresh)
 	}
 	g.POST("/v1/user/signup", user.Signup)
 	g.POST("/v1/user/auth", user.Auth)
