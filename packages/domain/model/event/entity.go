@@ -10,6 +10,7 @@ type EventEntity struct {
 	circleID circle.CircleID
 	name     Name
 	path     path.Path
+	guest    GuestCollection
 }
 
 func NewEventEntity(id *string, circleID *string, name *string, path *path.Path) (*EventEntity, error) {
@@ -26,7 +27,7 @@ func NewEventEntity(id *string, circleID *string, name *string, path *path.Path)
 		return nil, err
 	}
 
-	e := EventEntity{*i, *c, *n, *path}
+	e := EventEntity{*i, *c, *n, *path, *NewEmptyGuestCollection()}
 	return &e, nil
 }
 
@@ -41,6 +42,9 @@ func (e *EventEntity) Name() *Name {
 }
 func (e *EventEntity) Path() *path.Path {
 	return &e.path
+}
+func (e *EventEntity) Guest() *GuestCollection {
+	return &e.guest
 }
 
 func (en *EventEntity) Identical(e *EventEntity) bool {

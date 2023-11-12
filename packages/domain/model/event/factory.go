@@ -27,5 +27,5 @@ func (f EventFactoryImpl) Create(circleID *circle.CircleID, name *string) (*Even
 	if err != nil {
 		return nil, err
 	}
-	return &EventEntity{i, *circleID, *n, *p}, nil
+	return &EventEntity{i, *circleID, *n, *p, *NewEmptyGuestCollection()}, nil
 }
