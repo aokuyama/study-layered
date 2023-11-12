@@ -50,7 +50,7 @@ func Signup(c *gin.Context) {
 		panic(err)
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	c.JSON(http.StatusCreated, gin.H{
 		"id":    userOut.User.ID().String(),
 		"token": authOut.Token.String(),
 	})
