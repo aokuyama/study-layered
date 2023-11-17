@@ -80,7 +80,7 @@ func TestEquals(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.testName, func(t *testing.T) {
 			g := util.PanicOr(NewGuest(&tt.id, &tt.name, &tt.number))
-			e, err := sample.Equals(g)
+			e, err := sample.EqualsSafe(g)
 			assert.Equal(t, tt.equals, e)
 			assert.True(t, errors.Is(err, tt.err))
 		})

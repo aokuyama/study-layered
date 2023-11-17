@@ -15,6 +15,6 @@ func TestFactory(t *testing.T) {
 	e, err := EventFactoryImpl{}.Create(&circleID, &n)
 	assert.Equal(t, 36, len(e.ID().String()))
 	assert.Equal(t, "event", e.Name().String())
-	assert.True(t, e.Guest().IsEmpty())
+	assert.True(t, e.Guest().Empty())
 	assert.NoError(t, err)
 }

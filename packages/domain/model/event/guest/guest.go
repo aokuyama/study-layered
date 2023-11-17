@@ -40,11 +40,11 @@ func (g *Guest) Number() *uint8 {
 	return &g.number
 }
 
-func (gn *Guest) Identical(g *Guest) bool {
+func (gn Guest) Identical(g *Guest) bool {
 	return gn.UserID().Equals(g.UserID().UUID)
 }
 
-func (gn *Guest) Equals(g *Guest) (bool, error) {
+func (gn Guest) EqualsSafe(g *Guest) (bool, error) {
 	if !gn.Identical(g) {
 		return false, fmt.Errorf("%w no identical entity", errs.ErrBadParam)
 	}
@@ -55,4 +55,12 @@ func (gn *Guest) Equals(g *Guest) (bool, error) {
 		return false, nil
 	}
 	return true, nil
+}
+
+func (gn Guest) Equals(g *Guest) bool {
+	e, err := gn.EqualsSafe(g)
+	if err != nil {
+		panic(err)
+	}
+	return e
 }
