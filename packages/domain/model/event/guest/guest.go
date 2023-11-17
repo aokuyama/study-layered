@@ -39,3 +39,20 @@ func (g *Guest) Name() *string {
 func (g *Guest) Number() *uint8 {
 	return &g.number
 }
+
+func (gn *Guest) Identical(g *Guest) bool {
+	return gn.UserID().Equals(g.UserID().UUID)
+}
+
+func (gn *Guest) Equals(g *Guest) (bool, error) {
+	if !gn.Identical(g) {
+		return false, fmt.Errorf("%w no identical entity", errs.ErrBadParam)
+	}
+	if gn.name != g.name {
+		return false, nil
+	}
+	if gn.number != g.number {
+		return false, nil
+	}
+	return true, nil
+}

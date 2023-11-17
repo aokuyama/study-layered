@@ -6,3 +6,8 @@ func PanicOr[T any](v T, err error) T {
 	}
 	return v
 }
+
+func P[T any](v T) *T {
+	p := v
+	return &p
+}
