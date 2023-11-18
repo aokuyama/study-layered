@@ -1,17 +1,72 @@
 package event_test
 
 import (
+	"errors"
 	"testing"
 
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	. "github.com/aokuyama/circle_scheduler-api/packages/domain/model/event"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/event/guest"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/test"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewGuestCollection(t *testing.T) {
+	tests := []struct {
+		name  string
+		len   int
+		input []guest.GuestInput
+	}{
+		{"empty", 0, []guest.GuestInput{}},
+		{"one", 1, []guest.GuestInput{
+			{UserID: test.GenUUIDStinrg(1), Name: "a", Number: 1},
+		}},
+		{"many", 3, []guest.GuestInput{
+			{UserID: test.GenUUIDStinrg(1), Name: "a", Number: 1},
+			{UserID: test.GenUUIDStinrg(2), Name: "a", Number: 1},
+			{UserID: test.GenUUIDStinrg(3), Name: "a", Number: 1},
+		}},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, err := NewGuestCollection(tt.input)
+			assert.NoError(t, err)
+			assert.Equal(t, tt.len, c.Len())
+		})
+	}
+}
+
+func TestNewEmptyGuestCollection(t *testing.T) {
 	c := NewEmptyGuestCollection()
+	assert.Equal(t, 0, c.Len())
 	assert.True(t, c.Empty())
+}
+
+func TestErrorNewGuestCollection(t *testing.T) {
+	tests := []struct {
+		name  string
+		input []guest.GuestInput
+		err   error
+	}{
+		{"bad param", []guest.GuestInput{
+			{UserID: "", Name: "", Number: 1},
+		}, errs.ErrBadParam},
+		{"dupuricate", []guest.GuestInput{
+			{UserID: test.GenUUIDStinrg(1), Name: "a", Number: 1},
+			{UserID: test.GenUUIDStinrg(1), Name: "aa", Number: 1},
+		}, errs.ErrFatal},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, err := NewGuestCollection(tt.input)
+			assert.Error(t, err)
+			assert.Nil(t, c)
+			assert.True(t, errors.Is(err, tt.err))
+		})
+	}
 }
 
 func TestAppendGuest(t *testing.T) {

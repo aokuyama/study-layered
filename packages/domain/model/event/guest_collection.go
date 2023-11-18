@@ -1,6 +1,9 @@
 package event
 
 import (
+	"fmt"
+
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/event/guest"
 )
 
@@ -8,10 +11,19 @@ type GuestCollection struct {
 	list []guest.Guest
 }
 
-func NewGuestCollection() *GuestCollection {
-	g := []guest.Guest{}
-	c := GuestCollection{g}
-	return &c
+func NewGuestCollection(i []guest.GuestInput) (*GuestCollection, error) {
+	c := NewEmptyGuestCollection()
+	for _, v := range i {
+		g, err := guest.NewGuest(&v)
+		if err != nil {
+			return nil, err
+		}
+		c = c.Append(g)
+		if c == nil {
+			return nil, fmt.Errorf("duplication entity: %w", errs.ErrFatal)
+		}
+	}
+	return c, nil
 }
 
 func NewEmptyGuestCollection() *GuestCollection {
