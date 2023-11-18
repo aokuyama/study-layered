@@ -23,7 +23,7 @@ func TestNewGuest(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.testName, func(t *testing.T) {
-			g, err := NewGuest(&tt.id, &tt.name, &tt.number)
+			g, err := NewGuest(&GuestInput{tt.id, tt.name, tt.number})
 			assert.NotNil(t, g)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.id, g.UserID().String())
@@ -46,7 +46,7 @@ func TestErrorNewGuest(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.testName, func(t *testing.T) {
-			g, err := NewGuest(&tt.id, &tt.name, &tt.number)
+			g, err := NewGuest(&GuestInput{tt.id, tt.name, tt.number})
 			assert.Nil(t, g)
 			assert.Error(t, err)
 			assert.True(t, errors.Is(err, errs.ErrBadParam))
@@ -55,15 +55,15 @@ func TestErrorNewGuest(t *testing.T) {
 }
 
 func TestIdentical(t *testing.T) {
-	sample := test.PanicOr(NewGuest(test.P("26f90f21-dd19-4df1-81ff-ea9dcbcf03d1"), test.P("g"), test.P[uint8](1)))
-	g1 := test.PanicOr(NewGuest(test.P("26f90f21-dd19-4df1-81ff-ea9dcbcf03d1"), test.P("g"), test.P[uint8](1)))
-	g2 := test.PanicOr(NewGuest(test.P("d833a112-95e8-4042-ab02-ffde48bc874a"), test.P("g"), test.P[uint8](1)))
+	sample := test.PanicOr(NewGuest(&GuestInput{"26f90f21-dd19-4df1-81ff-ea9dcbcf03d1", "g", 1}))
+	g1 := test.PanicOr(NewGuest(&GuestInput{"26f90f21-dd19-4df1-81ff-ea9dcbcf03d1", "g", 1}))
+	g2 := test.PanicOr(NewGuest(&GuestInput{"d833a112-95e8-4042-ab02-ffde48bc874a", "g", 1}))
 	assert.True(t, sample.Identical(g1))
 	assert.False(t, sample.Identical(g2))
 }
 
 func TestEquals(t *testing.T) {
-	sample := test.PanicOr(NewGuest(test.P("26f90f21-dd19-4df1-81ff-ea9dcbcf03d1"), test.P("g"), test.P[uint8](1)))
+	sample := test.PanicOr(NewGuest(&GuestInput{"26f90f21-dd19-4df1-81ff-ea9dcbcf03d1", "g", 1}))
 	tests := []struct {
 		testName string
 		id, name string
@@ -79,7 +79,7 @@ func TestEquals(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.testName, func(t *testing.T) {
-			g := test.PanicOr(NewGuest(&tt.id, &tt.name, &tt.number))
+			g := test.PanicOr(NewGuest(&GuestInput{tt.id, tt.name, tt.number}))
 			e, err := sample.EqualsSafe(g)
 			assert.Equal(t, tt.equals, e)
 			assert.True(t, errors.Is(err, tt.err))

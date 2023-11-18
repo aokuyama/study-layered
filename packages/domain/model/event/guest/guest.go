@@ -13,18 +13,24 @@ type Guest struct {
 	number uint8
 }
 
-func NewGuest(userID *string, name *string, number *uint8) (*Guest, error) {
-	i, err := user.NewUserID(*userID)
+type GuestInput struct {
+	UserID string
+	Name   string
+	Number uint8
+}
+
+func NewGuest(i *GuestInput) (*Guest, error) {
+	ID, err := user.NewUserID(i.UserID)
 	if err != nil {
 		return nil, err
 	}
-	if len(*name) <= 0 || len(*name) > 10 {
+	if len(i.Name) <= 0 || len(i.Name) > 10 {
 		return nil, fmt.Errorf("%w must 1~10 characters", errs.ErrBadParam)
 	}
-	if *number <= 0 || *number > 5 {
+	if i.Number <= 0 || i.Number > 5 {
 		return nil, fmt.Errorf("%w be 1~5", errs.ErrBadParam)
 	}
-	g := Guest{*i, *name, *number}
+	g := Guest{*ID, i.Name, i.Number}
 	return &g, nil
 }
 

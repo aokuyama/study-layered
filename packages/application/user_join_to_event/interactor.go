@@ -16,7 +16,7 @@ func New(r event.EventRepository) UserJoinToEventUsecase {
 
 func (u *userJoinToEventInteractor) Invoke(i *UserJoinToEventInput) (*UserJoinToEventOutput, error) {
 	var err error
-	guest, err := guest.NewGuest(&i.UserID, &i.Name, &i.Number)
+	guest, err := guest.NewGuest(&guest.GuestInput{UserID: i.UserID, Name: i.Name, Number: i.Number})
 	if err != nil {
 		return nil, err
 	}

@@ -8,6 +8,12 @@ type GuestCollection struct {
 	list []guest.Guest
 }
 
+func NewGuestCollection() *GuestCollection {
+	g := []guest.Guest{}
+	c := GuestCollection{g}
+	return &c
+}
+
 func NewEmptyGuestCollection() *GuestCollection {
 	g := []guest.Guest{}
 	c := GuestCollection{g}
