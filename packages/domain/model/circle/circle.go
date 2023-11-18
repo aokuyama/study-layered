@@ -12,21 +12,32 @@ type Circle struct {
 	path    path.Path
 }
 
-func NewCircle(id *string, ownerID *string, name *string, path *path.Path) (*Circle, error) {
-	i, err := NewCircleID(*id)
+type CircleInput struct {
+	ID      string
+	OwnerID string
+	Name    string
+	Path    string
+}
+
+func NewCircle(i *CircleInput) (*Circle, error) {
+	ID, err := NewCircleID(i.ID)
 	if err != nil {
 		return nil, err
 	}
-	o, err := owner.NewOwnerID(*ownerID)
+	o, err := owner.NewOwnerID(i.OwnerID)
 	if err != nil {
 		return nil, err
 	}
-	n, err := NewName(*name)
+	n, err := NewName(i.Name)
+	if err != nil {
+		return nil, err
+	}
+	p, err := path.NewPath(i.Path)
 	if err != nil {
 		return nil, err
 	}
 
-	c := Circle{*i, *o, *n, *path}
+	c := Circle{*ID, *o, *n, *p}
 	return &c, nil
 }
 

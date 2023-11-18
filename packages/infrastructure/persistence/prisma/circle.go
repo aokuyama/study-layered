@@ -51,7 +51,12 @@ func (r *circleRepositoryPrisma) Find(i *circle.CircleID) (*circle.Circle, error
 		panic(err)
 	}
 
-	c, err := circle.NewCircle(&f.ID, &f.OwnerID, &f.Name, path)
+	c, err := circle.NewCircle(&circle.CircleInput{
+		ID:      f.ID,
+		OwnerID: f.OwnerID,
+		Name:    f.Name,
+		Path:    path.RawValue(), // 一度値オブジェクトにしたものを文字列にして詰め直しているのがイケてないが仕方ない
+	})
 	if err != nil {
 		panic(err)
 	}
@@ -76,7 +81,13 @@ func (r *circleRepositoryPrisma) FindByPath(p *path.Path) (*circle.Circle, error
 		panic(err)
 	}
 
-	c, err := circle.NewCircle(&f.ID, &f.OwnerID, &f.Name, p2)
+	c, err := circle.NewCircle(&circle.CircleInput{
+		ID:      f.ID,
+		OwnerID: f.OwnerID,
+		Name:    f.Name,
+		Path:    p2.RawValue(), // イケてないが仕方ない
+	})
+
 	if err != nil {
 		panic(err)
 	}
