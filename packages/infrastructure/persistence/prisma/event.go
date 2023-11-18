@@ -58,12 +58,12 @@ func (r *eventRepositoryPrisma) FindByPath(p *path.Path) (*event.Event, error) {
 		panic(err)
 	}
 
-	e, err := event.NewEvent(
-		&f.ID,
-		&f.CircleID,
-		&f.Name,
-		p2,
-	)
+	e, err := event.NewEvent(&event.EventInput{
+		ID:       f.ID,
+		CircleID: f.CircleID,
+		Name:     f.Name,
+		Path:     p2.RawValue(), // 一度値オブジェクトにしたものを文字列にして詰め直しているのがイケてないが仕方ない
+	})
 	if err != nil {
 		panic(err)
 	}

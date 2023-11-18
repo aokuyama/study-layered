@@ -14,21 +14,31 @@ type Event struct {
 	guest    GuestCollection
 }
 
-func NewEvent(eventID *string, circleID *string, name *string, path *path.Path) (*Event, error) {
-	i, err := NewEventID(*eventID)
-	if err != nil {
-		return nil, err
-	}
-	c, err := circle.NewCircleID(*circleID)
-	if err != nil {
-		return nil, err
-	}
-	n, err := NewName(*name)
-	if err != nil {
-		return nil, err
-	}
+type EventInput struct {
+	ID       string
+	CircleID string
+	Name     string
+	Path     string
+}
 
-	e := Event{*i, *c, *n, *path, *NewEmptyGuestCollection()}
+func NewEvent(i *EventInput) (*Event, error) {
+	ID, err := NewEventID(i.ID)
+	if err != nil {
+		return nil, err
+	}
+	c, err := circle.NewCircleID(i.CircleID)
+	if err != nil {
+		return nil, err
+	}
+	n, err := NewName(i.Name)
+	if err != nil {
+		return nil, err
+	}
+	p, err := path.NewPath(i.Path)
+	if err != nil {
+		return nil, err
+	}
+	e := Event{*ID, *c, *n, *p, *NewEmptyGuestCollection()}
 	return &e, nil
 }
 

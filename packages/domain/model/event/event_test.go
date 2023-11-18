@@ -3,7 +3,6 @@ package event_test
 import (
 	"testing"
 
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/common/path"
 	. "github.com/aokuyama/circle_scheduler-api/packages/domain/model/event"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/test"
 
@@ -16,8 +15,8 @@ func TestEntity(t *testing.T) {
 	i := "26f90f21-dd19-4df1-81ff-ea9dcbcf03d1"
 	c := "d833a112-95e8-4042-ab02-ffde48bc874a"
 	n := "event"
-	p := path.Path{}
-	e, err = NewEvent(&i, &c, &n, &p)
+	p := test.GenPathString()
+	e, err = NewEvent(&EventInput{i, c, n, p})
 	assert.Equal(t, "26f90f21-dd19-4df1-81ff-ea9dcbcf03d1", e.ID().String())
 	assert.Equal(t, "d833a112-95e8-4042-ab02-ffde48bc874a", e.CircleID().String())
 	assert.Equal(t, "event", e.Name().String())
@@ -36,8 +35,7 @@ func TestErrorNewEntity(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.testName, func(t *testing.T) {
-			p := path.Path{}
-			e, err := NewEvent(&tt.id, &tt.circleID, &tt.name, &p)
+			e, err := NewEvent(&EventInput{tt.id, tt.circleID, tt.name, test.GenPathString()})
 			assert.Nil(t, e)
 			assert.Error(t, err)
 		})
@@ -49,11 +47,11 @@ func TestIdenticalEntity(t *testing.T) {
 	i1 := "26f90f21-dd19-4df1-81ff-ea9dcbcf03d1"
 	i2 := "550e8400-e29b-41d4-a716-446655440000"
 	ci := "d833a112-95e8-4042-ab02-ffde48bc874a"
-	p := path.Path{}
+	p := test.GenPathString()
 
-	e1 := test.PanicOr(NewEvent(&i1, &ci, &n, &p))
-	e2 := test.PanicOr(NewEvent(&i1, &ci, &n, &p))
-	e3 := test.PanicOr(NewEvent(&i2, &ci, &n, &p))
+	e1 := test.PanicOr(NewEvent(&EventInput{i1, ci, n, p}))
+	e2 := test.PanicOr(NewEvent(&EventInput{i1, ci, n, p}))
+	e3 := test.PanicOr(NewEvent(&EventInput{i2, ci, n, p}))
 	assert.True(t, e1.Identical(e2))
 	assert.False(t, e1.Identical(e3))
 }
