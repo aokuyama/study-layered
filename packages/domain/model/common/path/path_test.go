@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	. "github.com/aokuyama/circle_scheduler-api/packages/domain/model/common/path"
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/errs"
 
 	"github.com/stretchr/testify/assert"
 )

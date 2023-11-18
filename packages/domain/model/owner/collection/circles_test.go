@@ -6,12 +6,12 @@ import (
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/common"
 	. "github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner/collection"
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/util"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/test"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestOwnerCirclesIsAppendable(t *testing.T) {
-	u := circle.CircleID{UUID: util.PanicOr(common.GenerateUUID())}
+	u := circle.CircleID{UUID: test.PanicOr(common.GenerateUUID())}
 	tests := []struct {
 		name   string
 		expect bool

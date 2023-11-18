@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	. "github.com/aokuyama/circle_scheduler-api/packages/domain/model/event"
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/test"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/test"
 
 	"github.com/stretchr/testify/assert"
 )

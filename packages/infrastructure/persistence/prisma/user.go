@@ -3,7 +3,7 @@ package prisma
 import (
 	"fmt"
 
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/errs"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/user"
 	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/prisma/db"
 )

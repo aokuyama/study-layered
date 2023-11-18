@@ -6,11 +6,10 @@ import (
 	"testing"
 
 	. "github.com/aokuyama/circle_scheduler-api/packages/application/user_join_to_event"
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/errs"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/event"
 	mock_event "github.com/aokuyama/circle_scheduler-api/packages/domain/model/event/.mock"
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/test"
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/util"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/test"
 	"go.uber.org/mock/gomock"
 
 	"github.com/stretchr/testify/assert"
@@ -21,7 +20,7 @@ func TestInvoke(t *testing.T) {
 	g := test.GenGuest(1)
 
 	i := UserJoinToEventInput{e.ID().String(), g.UserID().String(), *g.Name(), *g.Number()}
-	ei := util.PanicOr(event.NewEventID(e.ID().String()))
+	ei := test.PanicOr(event.NewEventID(e.ID().String()))
 
 	equalEvent := e.JoinGuest(g)
 	diffEvent := test.GenEvent(11)
@@ -61,7 +60,7 @@ func TestInvokeError(t *testing.T) {
 	diffEvent := test.GenEvent(11)
 
 	i := UserJoinToEventInput{"26f90f21-dd19-4df1-81ff-ea9dcbcf03d1", "d833a112-95e8-4042-ab02-ffde48bc874a", "name", 1}
-	ei := util.PanicOr(event.NewEventID("26f90f21-dd19-4df1-81ff-ea9dcbcf03d1"))
+	ei := test.PanicOr(event.NewEventID("26f90f21-dd19-4df1-81ff-ea9dcbcf03d1"))
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()

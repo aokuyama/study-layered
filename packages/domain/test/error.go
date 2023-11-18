@@ -1,4 +1,4 @@
-package util
+package test
 
 func PanicOr[T any](v T, err error) T {
 	if err != nil {

@@ -5,9 +5,9 @@ import (
 	"testing"
 
 	. "github.com/aokuyama/circle_scheduler-api/packages/application/show_circle/usecase"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
 	mock_circle "github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle/.mock"
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/errs"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )

@@ -4,9 +4,9 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/errs"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	. "github.com/aokuyama/circle_scheduler-api/packages/domain/model/event/guest"
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/util"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/test"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -55,15 +55,15 @@ func TestErrorNewGuest(t *testing.T) {
 }
 
 func TestIdentical(t *testing.T) {
-	sample := util.PanicOr(NewGuest(util.P("26f90f21-dd19-4df1-81ff-ea9dcbcf03d1"), util.P("g"), util.P[uint8](1)))
-	g1 := util.PanicOr(NewGuest(util.P("26f90f21-dd19-4df1-81ff-ea9dcbcf03d1"), util.P("g"), util.P[uint8](1)))
-	g2 := util.PanicOr(NewGuest(util.P("d833a112-95e8-4042-ab02-ffde48bc874a"), util.P("g"), util.P[uint8](1)))
+	sample := test.PanicOr(NewGuest(test.P("26f90f21-dd19-4df1-81ff-ea9dcbcf03d1"), test.P("g"), test.P[uint8](1)))
+	g1 := test.PanicOr(NewGuest(test.P("26f90f21-dd19-4df1-81ff-ea9dcbcf03d1"), test.P("g"), test.P[uint8](1)))
+	g2 := test.PanicOr(NewGuest(test.P("d833a112-95e8-4042-ab02-ffde48bc874a"), test.P("g"), test.P[uint8](1)))
 	assert.True(t, sample.Identical(g1))
 	assert.False(t, sample.Identical(g2))
 }
 
 func TestEquals(t *testing.T) {
-	sample := util.PanicOr(NewGuest(util.P("26f90f21-dd19-4df1-81ff-ea9dcbcf03d1"), util.P("g"), util.P[uint8](1)))
+	sample := test.PanicOr(NewGuest(test.P("26f90f21-dd19-4df1-81ff-ea9dcbcf03d1"), test.P("g"), test.P[uint8](1)))
 	tests := []struct {
 		testName string
 		id, name string
@@ -79,7 +79,7 @@ func TestEquals(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.testName, func(t *testing.T) {
-			g := util.PanicOr(NewGuest(&tt.id, &tt.name, &tt.number))
+			g := test.PanicOr(NewGuest(&tt.id, &tt.name, &tt.number))
 			e, err := sample.EqualsSafe(g)
 			assert.Equal(t, tt.equals, e)
 			assert.True(t, errors.Is(err, tt.err))

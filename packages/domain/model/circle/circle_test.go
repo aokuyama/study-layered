@@ -5,7 +5,7 @@ import (
 
 	. "github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/common/path"
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/util"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/test"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -51,9 +51,9 @@ func TestIdenticalEntity(t *testing.T) {
 	i2 := "550e8400-e29b-41d4-a716-446655440000"
 	oi := "d833a112-95e8-4042-ab02-ffde48bc874a"
 	p := path.Path{}
-	e1 := util.PanicOr(NewCircle(&i1, &oi, &n, &p))
-	e2 := util.PanicOr(NewCircle(&i1, &oi, &n, &p))
-	e3 := util.PanicOr(NewCircle(&i2, &oi, &n, &p))
+	e1 := test.PanicOr(NewCircle(&i1, &oi, &n, &p))
+	e2 := test.PanicOr(NewCircle(&i1, &oi, &n, &p))
+	e3 := test.PanicOr(NewCircle(&i2, &oi, &n, &p))
 	assert.True(t, e1.Identical(e2))
 	assert.False(t, e1.Identical(e3))
 }

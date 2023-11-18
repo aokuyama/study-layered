@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/aokuyama/circle_scheduler-api/packages/application/show_event/usecase"
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/errs"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/persistence/prisma"
 	"github.com/gin-gonic/gin"
 )

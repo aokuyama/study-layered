@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	. "github.com/aokuyama/circle_scheduler-api/packages/application/auth_user_by_id_and_password/usecase"
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/errs"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/user"
 	mock_user "github.com/aokuyama/circle_scheduler-api/packages/domain/model/user/.mock"
 	"go.uber.org/mock/gomock"

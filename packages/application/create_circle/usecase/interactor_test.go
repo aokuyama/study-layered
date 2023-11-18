@@ -4,9 +4,9 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
 	mock_circle "github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle/.mock"
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/errs"
 	mock_owner "github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner/.mock"
 	mock_specification "github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner/specification/.mock"
 	"github.com/stretchr/testify/assert"

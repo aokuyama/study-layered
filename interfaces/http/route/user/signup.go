@@ -7,7 +7,7 @@ import (
 	user_usecase "github.com/aokuyama/circle_scheduler-api/packages/application/create_user_by_password/usecase"
 	auth_usecase "github.com/aokuyama/circle_scheduler-api/packages/application/user_create_auth_token/usecase"
 
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/errs"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/user"
 	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/middleware"
 	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/persistence/prisma"
