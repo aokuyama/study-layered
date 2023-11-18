@@ -37,6 +37,10 @@ func (r *eventRepositoryPrisma) Create(e *event.EventEntity) error {
 	return err
 }
 
+func (r *eventRepositoryPrisma) Find(i *event.EventID) (*event.EventEntity, error) {
+	return nil, nil
+}
+
 func (r *eventRepositoryPrisma) FindByPath(p *path.Path) (*event.EventEntity, error) {
 	d := p.Digest()
 	f, err := r.prisma.client().Event.FindUnique(
@@ -64,4 +68,8 @@ func (r *eventRepositoryPrisma) FindByPath(p *path.Path) (*event.EventEntity, er
 		panic(err)
 	}
 	return e, nil
+}
+
+func (r *eventRepositoryPrisma) Update(after *event.EventEntity, before *event.EventEntity) error {
+	return nil
 }
