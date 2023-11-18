@@ -5,6 +5,7 @@ import (
 
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/common/path"
 	. "github.com/aokuyama/circle_scheduler-api/packages/domain/model/event"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/test"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/util"
 
 	"github.com/stretchr/testify/assert"
@@ -56,4 +57,17 @@ func TestIdenticalEntity(t *testing.T) {
 	e3 := util.PanicOr(NewEventEntity(&i2, &ci, &n, &p))
 	assert.True(t, e1.Identical(e2))
 	assert.False(t, e1.Identical(e3))
+}
+
+func TestJoinGuest(t *testing.T) {
+	e := test.GenEvent(1)
+	g1 := test.GenGuest(1)
+	g11 := test.GenGuest(11)
+	e1 := e.JoinGuest(g1)
+	assert.Equal(t, 0, e.Guest().Len())
+	assert.Equal(t, 1, e1.Guest().Len())
+	e11 := e1.JoinGuest(g11)
+	assert.Equal(t, 1, e11.Guest().Len())
+	f1 := e1.JoinGuest(g1)
+	assert.Nil(t, f1)
 }

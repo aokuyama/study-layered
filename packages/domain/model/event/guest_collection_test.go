@@ -4,24 +4,10 @@ import (
 	"testing"
 
 	. "github.com/aokuyama/circle_scheduler-api/packages/domain/model/event"
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/event/guest"
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/util"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/test"
 
 	"github.com/stretchr/testify/assert"
 )
-
-func newGuest(n int) *guest.Guest {
-	if n == 1 {
-		return util.PanicOr(guest.NewGuest(util.P("26f90f21-dd19-4df1-81ff-ea9dcbcf03d1"), util.P("guest1"), util.P[uint8](1)))
-	}
-	if n == 11 {
-		return util.PanicOr(guest.NewGuest(util.P("26f90f21-dd19-4df1-81ff-ea9dcbcf03d1"), util.P("guest1_1"), util.P[uint8](1)))
-	}
-	if n == 2 {
-		return util.PanicOr(guest.NewGuest(util.P("d833a112-95e8-4042-ab02-ffde48bc874a"), util.P("guest2"), util.P[uint8](1)))
-	}
-	return nil
-}
 
 func TestNewGuestCollection(t *testing.T) {
 	c := NewEmptyGuestCollection()
@@ -29,8 +15,8 @@ func TestNewGuestCollection(t *testing.T) {
 }
 
 func TestAppendGuest(t *testing.T) {
-	g1 := newGuest(1)
-	g2 := newGuest(2)
+	g1 := test.GenGuest(1)
+	g2 := test.GenGuest(2)
 
 	c0 := NewEmptyGuestCollection()
 	c1 := c0.Append(g1)
@@ -46,8 +32,8 @@ func TestAppendGuest(t *testing.T) {
 }
 
 func TestFailAppendGuest(t *testing.T) {
-	g1 := newGuest(1)
-	g2 := newGuest(2)
+	g1 := test.GenGuest(1)
+	g2 := test.GenGuest(2)
 
 	c0 := NewEmptyGuestCollection()
 	c1 := c0.Append(g1)
@@ -64,8 +50,8 @@ func TestFailAppendGuest(t *testing.T) {
 }
 
 func TestUpdateGuest(t *testing.T) {
-	g1 := newGuest(1)
-	g11 := newGuest(11)
+	g1 := test.GenGuest(1)
+	g11 := test.GenGuest(11)
 
 	c0 := NewEmptyGuestCollection()
 	c1 := c0.Append(g1)
@@ -77,8 +63,8 @@ func TestUpdateGuest(t *testing.T) {
 }
 
 func TestFailUpdate(t *testing.T) {
-	g1 := newGuest(1)
-	g2 := newGuest(2)
+	g1 := test.GenGuest(1)
+	g2 := test.GenGuest(2)
 
 	c0 := NewEmptyGuestCollection()
 	c1 := c0.Append(g1)
@@ -91,9 +77,9 @@ func TestFailUpdate(t *testing.T) {
 }
 
 func TestAppendOrUpdateGuest(t *testing.T) {
-	g1 := newGuest(1)
-	g11 := newGuest(11)
-	g2 := newGuest(2)
+	g1 := test.GenGuest(1)
+	g11 := test.GenGuest(11)
+	g2 := test.GenGuest(2)
 
 	c0 := NewEmptyGuestCollection()
 	c1 := c0.AppendOrUpdate(g1)
@@ -107,7 +93,7 @@ func TestAppendOrUpdateGuest(t *testing.T) {
 }
 
 func TestFailAppendOrUpdateGuest(t *testing.T) {
-	g1 := newGuest(1)
+	g1 := test.GenGuest(1)
 
 	c0 := NewEmptyGuestCollection()
 	c1 := c0.AppendOrUpdate(g1)

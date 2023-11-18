@@ -3,6 +3,7 @@ package event
 import (
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/common/path"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/event/guest"
 )
 
 type EventEntity struct {
@@ -13,8 +14,8 @@ type EventEntity struct {
 	guest    GuestCollection
 }
 
-func NewEventEntity(id *string, circleID *string, name *string, path *path.Path) (*EventEntity, error) {
-	i, err := NewEventID(*id)
+func NewEventEntity(eventID *string, circleID *string, name *string, path *path.Path) (*EventEntity, error) {
+	i, err := NewEventID(*eventID)
 	if err != nil {
 		return nil, err
 	}
@@ -49,4 +50,13 @@ func (e *EventEntity) Guest() *GuestCollection {
 
 func (en *EventEntity) Identical(e *EventEntity) bool {
 	return en.ID().Equals(e.ID().UUID)
+}
+
+func (e *EventEntity) JoinGuest(g *guest.Guest) *EventEntity {
+	newGuests := e.guest.AppendOrUpdate(g)
+	if newGuests == nil {
+		return nil
+	}
+	newEvent := EventEntity{e.id, e.circleID, e.name, e.path, *newGuests}
+	return &newEvent
 }
