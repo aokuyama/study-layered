@@ -4,8 +4,8 @@ package event
 import "github.com/aokuyama/circle_scheduler-api/packages/domain/model/common/path"
 
 type EventRepository interface {
-	Create(*EventEntity) error
-	Find(*EventID) (*EventEntity, error)
-	FindByPath(*path.Path) (*EventEntity, error)
-	Update(after *EventEntity, before *EventEntity) error
+	Create(*Event) error
+	Find(*EventID) (*Event, error)
+	FindByPath(*path.Path) (*Event, error)
+	Update(after *Event, before *Event) error
 }

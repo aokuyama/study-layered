@@ -14,5 +14,5 @@ type CreateEventInput struct {
 }
 
 type CreateEventOutput struct {
-	Event *event.EventEntity
+	Event *event.Event
 }

@@ -17,7 +17,7 @@ func TestInvoke(t *testing.T) {
 	defer ctrl.Finish()
 
 	cr := mock_event.NewMockEventRepository(ctrl)
-	c := &event.EventEntity{}
+	c := &event.Event{}
 	cr.EXPECT().FindByPath(gomock.Any()).Return(c, nil)
 
 	u := New(cr)

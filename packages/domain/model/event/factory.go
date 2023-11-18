@@ -8,12 +8,12 @@ import (
 )
 
 type EventFactory interface {
-	Create(circleID *circle.CircleID, name *string) (*EventEntity, error)
+	Create(circleID *circle.CircleID, name *string) (*Event, error)
 }
 
 type EventFactoryImpl struct{}
 
-func (f EventFactoryImpl) Create(circleID *circle.CircleID, name *string) (*EventEntity, error) {
+func (f EventFactoryImpl) Create(circleID *circle.CircleID, name *string) (*Event, error) {
 	n, err := NewName(*name)
 	if err != nil {
 		return nil, err
@@ -27,5 +27,5 @@ func (f EventFactoryImpl) Create(circleID *circle.CircleID, name *string) (*Even
 	if err != nil {
 		return nil, err
 	}
-	return &EventEntity{i, *circleID, *n, *p, *NewEmptyGuestCollection()}, nil
+	return &Event{i, *circleID, *n, *p, *NewEmptyGuestCollection()}, nil
 }

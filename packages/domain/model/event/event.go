@@ -6,7 +6,7 @@ import (
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/event/guest"
 )
 
-type EventEntity struct {
+type Event struct {
 	id       EventID
 	circleID circle.CircleID
 	name     Name
@@ -14,7 +14,7 @@ type EventEntity struct {
 	guest    GuestCollection
 }
 
-func NewEventEntity(eventID *string, circleID *string, name *string, path *path.Path) (*EventEntity, error) {
+func NewEvent(eventID *string, circleID *string, name *string, path *path.Path) (*Event, error) {
 	i, err := NewEventID(*eventID)
 	if err != nil {
 		return nil, err
@@ -28,35 +28,35 @@ func NewEventEntity(eventID *string, circleID *string, name *string, path *path.
 		return nil, err
 	}
 
-	e := EventEntity{*i, *c, *n, *path, *NewEmptyGuestCollection()}
+	e := Event{*i, *c, *n, *path, *NewEmptyGuestCollection()}
 	return &e, nil
 }
 
-func (e *EventEntity) ID() *EventID {
+func (e *Event) ID() *EventID {
 	return &e.id
 }
-func (e *EventEntity) CircleID() *circle.CircleID {
+func (e *Event) CircleID() *circle.CircleID {
 	return &e.circleID
 }
-func (e *EventEntity) Name() *Name {
+func (e *Event) Name() *Name {
 	return &e.name
 }
-func (e *EventEntity) Path() *path.Path {
+func (e *Event) Path() *path.Path {
 	return &e.path
 }
-func (e *EventEntity) Guest() *GuestCollection {
+func (e *Event) Guest() *GuestCollection {
 	return &e.guest
 }
 
-func (en *EventEntity) Identical(e *EventEntity) bool {
+func (en *Event) Identical(e *Event) bool {
 	return en.ID().Equals(e.ID().UUID)
 }
 
-func (e *EventEntity) JoinGuest(g *guest.Guest) *EventEntity {
+func (e *Event) JoinGuest(g *guest.Guest) *Event {
 	newGuests := e.guest.AppendOrUpdate(g)
 	if newGuests == nil {
 		return nil
 	}
-	newEvent := EventEntity{e.id, e.circleID, e.name, e.path, *newGuests}
+	newEvent := Event{e.id, e.circleID, e.name, e.path, *newGuests}
 	return &newEvent
 }

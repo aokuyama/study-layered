@@ -14,5 +14,5 @@ type CreateCircleInput struct {
 }
 
 type CreateCircleOutput struct {
-	Circle *circle.CircleEntity
+	Circle *circle.Circle
 }

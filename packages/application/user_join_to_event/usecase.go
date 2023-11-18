@@ -17,6 +17,6 @@ type UserJoinToEventInput struct {
 }
 
 type UserJoinToEventOutput struct {
-	Event event.EventEntity
+	Event event.Event
 	Guest guest.Guest
 }
