@@ -8,10 +8,11 @@ generator db {
 }
 
 model user {
-  id              String  @unique
-  password_digest Bytes   @db.ByteA
-  password_salt   Bytes   @db.ByteA
+  id              String       @unique
+  password_digest Bytes        @db.ByteA
+  password_salt   Bytes        @db.ByteA
   name            String?
+  event_user      event_user[]
 }
 
 model owner {
@@ -33,11 +34,22 @@ model circle {
 }
 
 model event {
-  id          String @unique
+  id          String       @unique
   circle_id   String
-  path_digest Bytes  @unique @db.ByteA
-  path        Bytes  @db.ByteA
-  path_iv     Bytes  @db.ByteA
+  path_digest Bytes        @unique @db.ByteA
+  path        Bytes        @db.ByteA
+  path_iv     Bytes        @db.ByteA
   name        String
-  circle      circle @relation(fields: [circle_id], references: [id], onDelete: Cascade)
+  circle      circle       @relation(fields: [circle_id], references: [id], onDelete: Cascade)
+  event_user  event_user[]
+}
+
+model event_user {
+  event_id String
+  user_id  String
+  number   Int
+  event    event  @relation(fields: [event_id], references: [id], onDelete: Cascade)
+  user     user   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([event_id, user_id])
 }
