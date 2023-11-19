@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	. "github.com/aokuyama/circle_scheduler-api/packages/domain/model/event"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/event/guest"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/test"
 
 	"github.com/stretchr/testify/assert"
@@ -12,14 +13,19 @@ import (
 func TestEntity(t *testing.T) {
 	var e *Event
 	var err error
-	i := "26f90f21-dd19-4df1-81ff-ea9dcbcf03d1"
-	c := "d833a112-95e8-4042-ab02-ffde48bc874a"
+	i := test.GenUUIDStinrg(1)
+	c := test.GenUUIDStinrg(2)
 	n := "event"
 	p := test.GenPathString()
-	e, err = NewEvent(&EventInput{i, c, n, p})
-	assert.Equal(t, "26f90f21-dd19-4df1-81ff-ea9dcbcf03d1", e.ID().String())
-	assert.Equal(t, "d833a112-95e8-4042-ab02-ffde48bc874a", e.CircleID().String())
+	g := []guest.GuestInput{{
+		UserID: test.GenUUIDStinrg(3), Name: "g1", Number: 1,
+	}}
+
+	e, err = NewEvent(&EventInput{i, c, n, p, g})
+	assert.Equal(t, test.GenUUIDStinrg(1), e.ID().String())
+	assert.Equal(t, test.GenUUIDStinrg(2), e.CircleID().String())
 	assert.Equal(t, "event", e.Name().String())
+	assert.Equal(t, test.GenUUIDStinrg(3), e.Guest().Nth(0).UserID().String())
 	assert.NoError(t, err)
 }
 
@@ -27,15 +33,17 @@ func TestErrorNewEntity(t *testing.T) {
 	tests := []struct {
 		testName           string
 		id, circleID, name string
+		guest              []guest.GuestInput
 	}{
-		{"id", "invalid", "d833a112-95e8-4042-ab02-ffde48bc874a", "circle"},
-		{"circleID", "26f90f21-dd19-4df1-81ff-ea9dcbcf03d1", "invalid", "circle"},
-		{"name", "26f90f21-dd19-4df1-81ff-ea9dcbcf03d1", "d833a112-95e8-4042-ab02-ffde48bc874a", ""},
+		{"id", "invalid", "d833a112-95e8-4042-ab02-ffde48bc874a", "circle", []guest.GuestInput{}},
+		{"circleID", "26f90f21-dd19-4df1-81ff-ea9dcbcf03d1", "invalid", "circle", []guest.GuestInput{}},
+		{"name", "26f90f21-dd19-4df1-81ff-ea9dcbcf03d1", "d833a112-95e8-4042-ab02-ffde48bc874a", "", []guest.GuestInput{}},
+		{"guest", "26f90f21-dd19-4df1-81ff-ea9dcbcf03d1", "d833a112-95e8-4042-ab02-ffde48bc874a", "circle", []guest.GuestInput{{UserID: "", Name: "g1", Number: 1}}},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.testName, func(t *testing.T) {
-			e, err := NewEvent(&EventInput{tt.id, tt.circleID, tt.name, test.GenPathString()})
+			e, err := NewEvent(&EventInput{tt.id, tt.circleID, tt.name, test.GenPathString(), tt.guest})
 			assert.Nil(t, e)
 			assert.Error(t, err)
 		})
@@ -48,10 +56,11 @@ func TestIdenticalEntity(t *testing.T) {
 	i2 := "550e8400-e29b-41d4-a716-446655440000"
 	ci := "d833a112-95e8-4042-ab02-ffde48bc874a"
 	p := test.GenPathString()
+	g := []guest.GuestInput{}
 
-	e1 := test.PanicOr(NewEvent(&EventInput{i1, ci, n, p}))
-	e2 := test.PanicOr(NewEvent(&EventInput{i1, ci, n, p}))
-	e3 := test.PanicOr(NewEvent(&EventInput{i2, ci, n, p}))
+	e1 := test.PanicOr(NewEvent(&EventInput{i1, ci, n, p, g}))
+	e2 := test.PanicOr(NewEvent(&EventInput{i1, ci, n, p, g}))
+	e3 := test.PanicOr(NewEvent(&EventInput{i2, ci, n, p, g}))
 	assert.True(t, e1.Identical(e2))
 	assert.False(t, e1.Identical(e3))
 }

@@ -19,6 +19,7 @@ type EventInput struct {
 	CircleID string
 	Name     string
 	Path     string
+	Guest    []guest.GuestInput
 }
 
 func NewEvent(i *EventInput) (*Event, error) {
@@ -38,7 +39,12 @@ func NewEvent(i *EventInput) (*Event, error) {
 	if err != nil {
 		return nil, err
 	}
-	e := Event{*ID, *c, *n, *p, *NewEmptyGuestCollection()}
+	g, err := NewGuestCollection(i.Guest)
+	if err != nil {
+		return nil, err
+	}
+
+	e := Event{*ID, *c, *n, *p, *g}
 	return &e, nil
 }
 

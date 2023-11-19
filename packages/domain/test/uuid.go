@@ -8,7 +8,7 @@ func GenUUIDStinrg(n int) string {
 		return "d833a112-95e8-4042-ab02-ffde48bc874a"
 	}
 	if n == 3 {
-		return "a7ece1ec-f5f3-4af4-b716-995feb91ac51"
+		return "550e8400-e29b-41d4-a716-446655440000"
 	}
 	panic("undefined factory")
 }
