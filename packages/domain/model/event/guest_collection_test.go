@@ -155,3 +155,21 @@ func TestFailAppendOrUpdateGuest(t *testing.T) {
 	f1 := c1.AppendOrUpdate(g1)
 	assert.Nil(t, f1, "not updated")
 }
+
+func TestIdenticalItem(t *testing.T) {
+	g1 := test.GenGuest(1)
+	g11 := test.GenGuest(11)
+	g2 := test.GenGuest(2)
+
+	c0 := NewEmptyGuestCollection()
+	c1 := c0.AppendOrUpdate(g1)
+	c2 := c1.AppendOrUpdate(g11)
+	assert.Equal(t, g1, c1.IdenticalItem(g1))
+	assert.True(t, c1.ExistsIdentical(g1))
+
+	assert.Equal(t, g11, c2.IdenticalItem(g1))
+	assert.True(t, c2.ExistsIdentical(g1))
+
+	assert.Nil(t, c1.IdenticalItem(g2))
+	assert.False(t, c1.ExistsIdentical(g2))
+}

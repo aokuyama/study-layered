@@ -102,3 +102,16 @@ func (c *GuestCollection) AppendOrUpdate(g *guest.Guest) *GuestCollection {
 	new := GuestCollection{l}
 	return &new
 }
+
+func (c *GuestCollection) IdenticalItem(g *guest.Guest) *guest.Guest {
+	for _, item := range c.list {
+		if item.Identical(g) {
+			return &item
+		}
+	}
+	return nil
+}
+
+func (c *GuestCollection) ExistsIdentical(g *guest.Guest) bool {
+	return c.IdenticalItem(g) != nil
+}
