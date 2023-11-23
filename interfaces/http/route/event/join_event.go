@@ -61,6 +61,9 @@ func JoinEvent(c *gin.Context) {
 			"id":    out.Event.ID().String(),
 			"name":  out.Event.Name().String(),
 			"guest": guest,
+			// TODO いずれ置き換える
+			"start_at": "2000-01-01 00:00:00",
+			"remarks":  "",
 		},
 		"user": gin.H{
 			"id":     out.Guest.UserID().String(),
