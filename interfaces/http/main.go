@@ -46,14 +46,23 @@ func main() {
 			"status": "OK",
 		})
 	})
+
 	v1user := g.Group("/v1/user")
 	v1user.Use(middleware.AuthMiddleware)
 	{
 		v1user.GET("me", user.Me)
 		v1user.GET("refresh", user.Refresh)
 	}
+
 	g.POST("/v1/user/signup", user.Signup)
 	g.POST("/v1/user/auth", user.Auth)
 	g.GET("/v1/event/:path", event.FetchEvent)
+
+	v1event := g.Group("/v1/event")
+	v1event.Use(middleware.AuthMiddleware)
+	{
+		v1event.POST(":id/member", event.JoinEvent)
+	}
+
 	g.Run(":3000")
 }

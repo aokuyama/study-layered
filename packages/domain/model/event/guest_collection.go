@@ -40,6 +40,10 @@ func (c *GuestCollection) Len() int {
 	return len(c.list)
 }
 
+func (c *GuestCollection) Items() []guest.Guest {
+	return c.list
+}
+
 func (c *GuestCollection) Nth(n int) *guest.Guest {
 	return &c.list[n]
 }

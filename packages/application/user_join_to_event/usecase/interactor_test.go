@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	. "github.com/aokuyama/circle_scheduler-api/packages/application/user_join_to_event"
+	. "github.com/aokuyama/circle_scheduler-api/packages/application/user_join_to_event/usecase"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/event"
 	mock_event "github.com/aokuyama/circle_scheduler-api/packages/domain/model/event/.mock"
