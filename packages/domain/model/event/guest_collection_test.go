@@ -113,8 +113,8 @@ func TestUpdateGuest(t *testing.T) {
 	c11 := c1.Update(g11)
 	assert.Equal(t, 1, c1.Len())
 	assert.Equal(t, 1, c11.Len())
-	assert.Equal(t, "guest1", *c1.Nth(0).Name())
-	assert.Equal(t, "guest1_1", *c11.Nth(0).Name())
+	assert.Equal(t, "guest1", c1.Nth(0).Name())
+	assert.Equal(t, "guest1_1", c11.Nth(0).Name())
 }
 
 func TestFailUpdate(t *testing.T) {
@@ -141,10 +141,10 @@ func TestAppendOrUpdateGuest(t *testing.T) {
 	c11 := c1.AppendOrUpdate(g11)
 	assert.Equal(t, 1, c1.Len())
 	assert.Equal(t, 1, c11.Len())
-	assert.Equal(t, "guest1", *c1.Nth(0).Name())
-	assert.Equal(t, "guest1_1", *c11.Nth(0).Name())
+	assert.Equal(t, "guest1", c1.Nth(0).Name())
+	assert.Equal(t, "guest1_1", c11.Nth(0).Name())
 	c2 := c1.AppendOrUpdate(g2)
-	assert.Equal(t, "guest2", *c2.Nth(1).Name())
+	assert.Equal(t, "guest2", c2.Nth(1).Name())
 }
 
 func TestFailAppendOrUpdateGuest(t *testing.T) {

@@ -65,7 +65,7 @@ func (r *eventRepositoryPrisma) Update(after *event.Event, before *event.Event) 
 			// 追加
 			txs = append(txs,
 				r.prisma.client().EventUser.CreateOne(
-					db.EventUser.Number.Set(int(*afterGuest.Number())),
+					db.EventUser.Number.Set(int(afterGuest.Number())),
 					db.EventUser.Event.Link(db.Event.ID.Set(after.ID().String())),
 					db.EventUser.User.Link(db.User.ID.Set(afterGuest.UserID().String())),
 				).Tx(),
@@ -75,7 +75,7 @@ func (r *eventRepositoryPrisma) Update(after *event.Event, before *event.Event) 
 				r.prisma.client().User.FindUnique(
 					db.User.ID.Equals(afterGuest.UserID().String()),
 				).Update(
-					db.User.Name.Set(*afterGuest.Name()),
+					db.User.Name.Set(afterGuest.Name()),
 				).Tx(),
 			)
 		} else if !beforeGuest.Equals(&afterGuest) {
@@ -87,7 +87,7 @@ func (r *eventRepositoryPrisma) Update(after *event.Event, before *event.Event) 
 						db.EventUser.UserID.Equals(afterGuest.UserID().String()),
 					),
 				).Update(
-					db.EventUser.Number.Set(int(*afterGuest.Number())),
+					db.EventUser.Number.Set(int(afterGuest.Number())),
 				).Tx(),
 			)
 			// ユーザー名の更新
@@ -95,7 +95,7 @@ func (r *eventRepositoryPrisma) Update(after *event.Event, before *event.Event) 
 				r.prisma.client().User.FindUnique(
 					db.User.ID.Equals(afterGuest.UserID().String()),
 				).Update(
-					db.User.Name.Set(*afterGuest.Name()),
+					db.User.Name.Set(afterGuest.Name()),
 				).Tx(),
 			)
 		}

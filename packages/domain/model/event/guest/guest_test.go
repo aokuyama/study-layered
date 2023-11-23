@@ -27,8 +27,8 @@ func TestNewGuest(t *testing.T) {
 			assert.NotNil(t, g)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.id, g.UserID().String())
-			assert.Equal(t, tt.name, *g.Name())
-			assert.Equal(t, tt.number, *g.Number())
+			assert.Equal(t, tt.name, g.Name())
+			assert.Equal(t, tt.number, g.Number())
 		})
 	}
 }

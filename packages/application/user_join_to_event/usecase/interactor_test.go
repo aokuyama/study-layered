@@ -19,7 +19,7 @@ func TestInvoke(t *testing.T) {
 	e := test.GenEvent(1)
 	g := test.GenGuest(1)
 
-	i := UserJoinToEventInput{e.ID().String(), g.UserID().String(), *g.Name(), *g.Number()}
+	i := UserJoinToEventInput{e.ID().String(), g.UserID().String(), g.Name(), g.Number()}
 	ei := test.PanicOr(event.NewEventID(e.ID().String()))
 
 	equalEvent := e.JoinGuest(g)

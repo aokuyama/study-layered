@@ -38,12 +38,12 @@ func (g *Guest) UserID() *user.UserID {
 	return &g.userId
 }
 
-func (g *Guest) Name() *string {
-	return &g.name
+func (g *Guest) Name() string {
+	return g.name
 }
 
-func (g *Guest) Number() *uint8 {
-	return &g.number
+func (g *Guest) Number() uint8 {
+	return g.number
 }
 
 func (gn Guest) Identical(g *Guest) bool {

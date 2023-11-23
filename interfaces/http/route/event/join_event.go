@@ -49,8 +49,8 @@ func JoinEvent(c *gin.Context) {
 	for _, g := range out.Event.Guest().Items() {
 		guest = append(guest, gin.H{
 			"id":     g.UserID().String(),
-			"name":   *g.Name(),
-			"number": *g.Number(),
+			"name":   g.Name(),
+			"number": g.Number(),
 		})
 	}
 
