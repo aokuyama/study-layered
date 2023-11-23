@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/aokuyama/circle_scheduler-api/interfaces/http/middleware"
+	"github.com/aokuyama/circle_scheduler-api/interfaces/http/middleware/auth"
 	"github.com/aokuyama/circle_scheduler-api/interfaces/http/route/event"
 	"github.com/aokuyama/circle_scheduler-api/interfaces/http/route/user"
 	"github.com/gin-contrib/cors"
@@ -48,7 +48,7 @@ func main() {
 	})
 
 	v1user := g.Group("/v1/user")
-	v1user.Use(middleware.AuthMiddleware)
+	v1user.Use(auth.Middleware)
 	{
 		v1user.GET("me", user.Me)
 		v1user.GET("refresh", user.Refresh)
@@ -59,7 +59,7 @@ func main() {
 	g.GET("/v1/e/:path", event.FetchEvent)
 
 	v1event := g.Group("/v1/event")
-	v1event.Use(middleware.AuthMiddleware)
+	v1event.Use(auth.Middleware)
 	{
 		v1event.POST(":id/member", event.JoinEvent)
 	}

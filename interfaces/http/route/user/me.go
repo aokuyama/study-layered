@@ -3,17 +3,14 @@ package user
 import (
 	"net/http"
 
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/user"
+	"github.com/aokuyama/circle_scheduler-api/interfaces/http/middleware/auth"
 	"github.com/gin-gonic/gin"
 )
 
 func Me(c *gin.Context) {
-	i, ok := c.Get("AuthorizedUser")
-	if !ok {
-		panic("missing user")
-	}
+	id := auth.GetAuthorizedUser(c)
 
 	c.JSON(http.StatusOK, gin.H{
-		"id": i.(*user.UserID).String(),
+		"id": id.String(),
 	})
 }

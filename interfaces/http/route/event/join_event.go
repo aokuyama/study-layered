@@ -3,17 +3,15 @@ package event
 import (
 	"net/http"
 
+	"github.com/aokuyama/circle_scheduler-api/interfaces/http/middleware/auth"
 	"github.com/aokuyama/circle_scheduler-api/packages/application/user_join_to_event/usecase"
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/user"
 	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/persistence/prisma"
 	"github.com/gin-gonic/gin"
 )
 
 func JoinEvent(c *gin.Context) {
-	ID, ok := c.Get("AuthorizedUser")
-	if !ok {
-		panic("missing user")
-	}
+	id := auth.GetAuthorizedUser(c)
+
 	b := struct {
 		User struct {
 			Name   string
@@ -26,7 +24,7 @@ func JoinEvent(c *gin.Context) {
 	}
 	i := usecase.UserJoinToEventInput{
 		EventID: c.Param("id"),
-		UserID:  ID.(*user.UserID).String(),
+		UserID:  id.String(),
 		Name:    b.User.Name,
 		Number:  uint8(b.User.Number),
 	}
