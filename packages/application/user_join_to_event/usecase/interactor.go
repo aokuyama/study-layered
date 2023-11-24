@@ -1,8 +1,6 @@
 package usecase
 
 import (
-	"fmt"
-
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/event"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/event/guest"
@@ -36,7 +34,7 @@ func (u *userJoinToEventInteractor) Invoke(i *UserJoinToEventInput) (*UserJoinTo
 
 	afterEvent := event.JoinGuest(guest)
 	if afterEvent == nil {
-		return nil, fmt.Errorf("%w: guest already appended", errs.ErrConflict)
+		return nil, errs.NewConflict("guest already appended")
 	}
 
 	err = u.repository.Update(afterEvent, event)

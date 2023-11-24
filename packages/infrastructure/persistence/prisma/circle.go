@@ -1,8 +1,7 @@
 package prisma
 
 import (
-	"fmt"
-
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/common/path"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/owner"
@@ -40,7 +39,7 @@ func (r *circleRepositoryPrisma) Create(c *circle.Circle) error {
 func (r *circleRepositoryPrisma) Find(i *circle.CircleID) (*circle.Circle, error) {
 	f, err := r.prisma.client().Circle.FindUnique(db.Circle.ID.Equals(i.String())).Exec(r.prisma.ctx)
 	if err != nil {
-		return nil, fmt.Errorf("not found\n%w", err)
+		return nil, errs.NewNotFound(err.Error())
 	}
 	en := path.Encrypted{
 		Data: f.Path,
@@ -69,7 +68,7 @@ func (r *circleRepositoryPrisma) FindByPath(p *path.Path) (*circle.Circle, error
 		db.Circle.PathDigest.Equals(d[:]),
 	).Exec(r.prisma.ctx)
 	if err != nil {
-		return nil, fmt.Errorf("not found\n%w", err)
+		return nil, errs.NewNotFound(err.Error())
 	}
 
 	en := path.Encrypted{

@@ -2,7 +2,6 @@ package usecase_test
 
 import (
 	"errors"
-	"fmt"
 	"testing"
 
 	. "github.com/aokuyama/circle_scheduler-api/packages/application/user_create_auth_token/usecase"
@@ -34,7 +33,7 @@ func TestInvoke(t *testing.T) {
 		}, UserCreateAuthTokenInput{"fail"}, nil, errs.ErrBadParam},
 
 		{"fail create token", func(r *mock_user.MockUserAuthRepository) {
-			r.EXPECT().CreateToken(gomock.Any()).Return(to, fmt.Errorf("test: %w", errs.ErrFatal))
+			r.EXPECT().CreateToken(gomock.Any()).Return(to, errs.NewFatal("test"))
 		}, UserCreateAuthTokenInput{"26f90f21-dd19-4df1-81ff-ea9dcbcf03d1"}, nil, errs.ErrFatal},
 	}
 

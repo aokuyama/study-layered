@@ -2,7 +2,6 @@ package usecase_test
 
 import (
 	"errors"
-	"fmt"
 	"testing"
 
 	. "github.com/aokuyama/circle_scheduler-api/packages/application/auth_user_by_id_and_password/usecase"
@@ -40,7 +39,7 @@ func TestInvoke(t *testing.T) {
 		}, AuthUserByIDAndPasswordInput{id, ""}, nil, errs.ErrBadParam},
 
 		{"fail auth", func(r *mock_user.MockUserRepository) {
-			r.EXPECT().FindWithPasswordAuth(gomock.Any(), gomock.Any()).Return(nil, fmt.Errorf("test: %w", errs.ErrUnauthorized))
+			r.EXPECT().FindWithPasswordAuth(gomock.Any(), gomock.Any()).Return(nil, errs.NewUnauthorized("test"))
 		}, AuthUserByIDAndPasswordInput{id, pw}, nil, errs.ErrUnauthorized},
 	}
 

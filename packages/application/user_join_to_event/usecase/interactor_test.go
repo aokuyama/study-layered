@@ -2,7 +2,6 @@ package usecase_test
 
 import (
 	"errors"
-	"fmt"
 	"testing"
 
 	. "github.com/aokuyama/circle_scheduler-api/packages/application/user_join_to_event/usecase"
@@ -77,12 +76,12 @@ func TestInvokeError(t *testing.T) {
 		}, UserJoinToEventInput{"fail", "26f90f21-dd19-4df1-81ff-ea9dcbcf03d1", "name", 1}, errs.ErrBadParam},
 
 		{"event not found", func(r *mock_event.MockEventRepository) {
-			r.EXPECT().Find(ei).Return(nil, fmt.Errorf("test: %w", errs.ErrNotFound))
+			r.EXPECT().Find(ei).Return(nil, errs.NewNotFound("test"))
 		}, i, errs.ErrNotFound},
 
 		{"fail update event", func(r *mock_event.MockEventRepository) {
 			r.EXPECT().Find(ei).Return(diffEvent, nil)
-			r.EXPECT().Update(gomock.Any(), diffEvent).Return(fmt.Errorf("test: %w", errs.ErrFatal))
+			r.EXPECT().Update(gomock.Any(), diffEvent).Return(errs.NewFatal("test"))
 		}, i, errs.ErrFatal},
 
 		{"conflict", func(r *mock_event.MockEventRepository) {

@@ -4,7 +4,6 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"errors"
-	"fmt"
 	"os"
 	"regexp"
 	"unicode/utf8"
@@ -21,10 +20,10 @@ var reg = regexp.MustCompile("^[0-9A-Za-z]{16}$")
 func NewPath(v string) (*Path, error) {
 	c := utf8.RuneCountInString(v)
 	if c != 16 {
-		return nil, fmt.Errorf("%w must 16 characters", errs.ErrBadParam)
+		return nil, errs.NewBadParam("must 16 characters")
 	}
 	if !reg.MatchString(v) {
-		return nil, fmt.Errorf("%w alphanumeric only", errs.ErrBadParam)
+		return nil, errs.NewBadParam("alphanumeric only")
 	}
 	p := Path{v}
 	return &p, nil

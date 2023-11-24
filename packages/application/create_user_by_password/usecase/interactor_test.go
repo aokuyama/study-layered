@@ -2,7 +2,6 @@ package usecase_test
 
 import (
 	"errors"
-	"fmt"
 	"testing"
 
 	. "github.com/aokuyama/circle_scheduler-api/packages/application/create_user_by_password/usecase"
@@ -37,14 +36,14 @@ func TestInvoke(t *testing.T) {
 		}, CreateUserByPasswordInput{"i1"}, &CreateUserByPasswordOutput{u}, nil},
 
 		{"factory fail create", func(r *mock_user.MockUserFactory) {
-			r.EXPECT().Create("i2").Return(nil, fmt.Errorf("test: %w", errs.ErrBadParam))
+			r.EXPECT().Create("i2").Return(nil, errs.NewBadParam("test"))
 		}, func(r *mock_user.MockUserRepository) {
 		}, CreateUserByPasswordInput{"i2"}, nil, errs.ErrBadParam},
 
 		{"repository fail create", func(r *mock_user.MockUserFactory) {
 			r.EXPECT().Create("i3").Return(&up, nil)
 		}, func(r *mock_user.MockUserRepository) {
-			r.EXPECT().Create(&up).Return(fmt.Errorf("test: %w", errs.ErrFatal))
+			r.EXPECT().Create(&up).Return(errs.NewFatal("test"))
 		}, CreateUserByPasswordInput{"i3"}, nil, errs.ErrFatal},
 	}
 

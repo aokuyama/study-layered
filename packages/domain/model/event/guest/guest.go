@@ -1,8 +1,6 @@
 package guest
 
 import (
-	"fmt"
-
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/user"
 )
@@ -25,10 +23,10 @@ func NewGuest(i *GuestInput) (*Guest, error) {
 		return nil, err
 	}
 	if len(i.Name) <= 0 || len(i.Name) > 10 {
-		return nil, fmt.Errorf("%w must 1~10 characters", errs.ErrBadParam)
+		return nil, errs.NewBadParam("must 1~10 characters")
 	}
 	if i.Number <= 0 || i.Number > 5 {
-		return nil, fmt.Errorf("%w be 1~5", errs.ErrBadParam)
+		return nil, errs.NewBadParam("be 1~5")
 	}
 	g := Guest{*ID, i.Name, i.Number}
 	return &g, nil
@@ -52,7 +50,7 @@ func (gn Guest) Identical(g *Guest) bool {
 
 func (gn Guest) EqualsSafe(g *Guest) (bool, error) {
 	if !gn.Identical(g) {
-		return false, fmt.Errorf("%w no identical entity", errs.ErrBadParam)
+		return false, errs.NewBadParam("no identical entity")
 	}
 	if gn.name != g.name {
 		return false, nil

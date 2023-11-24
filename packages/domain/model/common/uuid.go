@@ -1,8 +1,6 @@
 package common
 
 import (
-	"fmt"
-
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	"github.com/google/uuid"
 )
@@ -12,7 +10,7 @@ type UUID string
 func NewUUID(v string) (*UUID, error) {
 	_, err := uuid.Parse(v)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %w", errs.ErrBadParam, err)
+		return nil, errs.NewBadParam(err.Error())
 	}
 	i := UUID(v)
 	return &i, nil

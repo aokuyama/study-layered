@@ -1,8 +1,6 @@
 package event
 
 import (
-	"fmt"
-
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/event/guest"
 )
@@ -20,7 +18,7 @@ func NewGuestCollection(i []guest.GuestInput) (*GuestCollection, error) {
 		}
 		c = c.Append(g)
 		if c == nil {
-			return nil, fmt.Errorf("duplication entity: %w", errs.ErrFatal)
+			return nil, errs.NewFatal("duplication entity")
 		}
 	}
 	return c, nil

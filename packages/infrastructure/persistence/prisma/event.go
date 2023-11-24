@@ -1,8 +1,6 @@
 package prisma
 
 import (
-	"fmt"
-
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/common/path"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/event"
@@ -122,7 +120,7 @@ func (r *eventRepositoryPrisma) Update(after *event.Event, before *event.Event) 
 
 func newEventModel(f *db.EventModel, err error) (*event.Event, error) {
 	if err != nil {
-		return nil, fmt.Errorf("%w %w", errs.ErrNotFound, err)
+		return nil, errs.NewNotFound(err.Error())
 	}
 	en := path.Encrypted{
 		Data: f.Path,

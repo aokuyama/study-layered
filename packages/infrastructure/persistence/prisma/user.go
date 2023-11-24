@@ -1,8 +1,6 @@
 package prisma
 
 import (
-	"fmt"
-
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/user"
 	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/prisma/db"
@@ -32,7 +30,7 @@ func (r *userRepositoryPrisma) Create(u *user.UserWithPassword) error {
 func (r *userRepositoryPrisma) Find(i *user.UserID) (*user.User, error) {
 	f, err := r.prisma.client().User.FindUnique(db.User.ID.Equals(i.String())).Exec(r.prisma.ctx)
 	if err != nil {
-		return nil, fmt.Errorf("not found\n%w", err)
+		return nil, errs.NewNotFound(err.Error())
 	}
 
 	i, err = user.NewUserID(f.ID)
@@ -45,7 +43,7 @@ func (r *userRepositoryPrisma) Find(i *user.UserID) (*user.User, error) {
 func (r *userRepositoryPrisma) FindWithPasswordAuth(i *user.UserID, p *user.Password) (*user.User, error) {
 	f, err := r.prisma.client().User.FindUnique(db.User.ID.Equals(i.String())).Exec(r.prisma.ctx)
 	if err != nil {
-		return nil, fmt.Errorf("not found\n%w", err)
+		return nil, errs.NewNotFound(err.Error())
 	}
 
 	i, err = user.NewUserID(f.ID)

@@ -4,7 +4,6 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"errors"
-	"fmt"
 	"os"
 	"regexp"
 	"unicode/utf8"
@@ -21,10 +20,10 @@ var reg = regexp.MustCompile("^[a-zA-Z0-9!-/:-@¥[-`{-~]*$")
 func NewPassword(v string) (*Password, error) {
 	c := utf8.RuneCountInString(v)
 	if c < 12 {
-		return nil, fmt.Errorf("%w can`t be less than 12 chars", errs.ErrBadParam)
+		return nil, errs.NewBadParam("can`t be less than 12 chars")
 	}
 	if !reg.MatchString(v) {
-		return nil, fmt.Errorf("%w half-with characters only", errs.ErrBadParam)
+		return nil, errs.NewBadParam("half-with characters only")
 	}
 	p := Password{v}
 	return &p, nil
