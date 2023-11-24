@@ -77,3 +77,15 @@ func TestJoinGuest(t *testing.T) {
 	f1 := e1.JoinGuest(g1)
 	assert.Nil(t, f1)
 }
+
+func TestRemoveGuest(t *testing.T) {
+	g1 := test.GenGuest(1)
+	g2 := test.GenGuest(2)
+	e12 := test.GenEvent(1).JoinGuest(g1).JoinGuest(g2)
+	assert.Equal(t, 2, e12.Guest().Len())
+	e2 := e12.RemoveGuest(g1.UserID())
+	assert.Equal(t, 1, e2.Guest().Len())
+	assert.Nil(t, e2.RemoveGuest(g1.UserID()))
+	e0 := e2.RemoveGuest(g2.UserID())
+	assert.Equal(t, 0, e0.Guest().Len())
+}

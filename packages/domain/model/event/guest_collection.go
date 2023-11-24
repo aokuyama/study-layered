@@ -3,6 +3,7 @@ package event
 import (
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/event/guest"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/user"
 )
 
 type GuestCollection struct {
@@ -112,4 +113,21 @@ func (c *GuestCollection) IdenticalItem(g *guest.Guest) *guest.Guest {
 
 func (c *GuestCollection) ExistsIdentical(g *guest.Guest) bool {
 	return c.IdenticalItem(g) != nil
+}
+
+func (c *GuestCollection) Remove(id *user.UserID) *GuestCollection {
+	l := []guest.Guest{}
+	found := false
+	for _, item := range c.list {
+		if item.UserID().Equals(id.UUID) {
+			found = true
+		} else {
+			l = append(l, item)
+		}
+	}
+	if !found {
+		return nil
+	}
+	new := GuestCollection{l}
+	return &new
 }

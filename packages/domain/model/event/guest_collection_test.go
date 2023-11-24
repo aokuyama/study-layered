@@ -7,6 +7,7 @@ import (
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	. "github.com/aokuyama/circle_scheduler-api/packages/domain/model/event"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/event/guest"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/user"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/test"
 
 	"github.com/stretchr/testify/assert"
@@ -172,4 +173,30 @@ func TestIdenticalItem(t *testing.T) {
 
 	assert.Nil(t, c1.IdenticalItem(g2))
 	assert.False(t, c1.ExistsIdentical(g2))
+}
+
+func TestRemove(t *testing.T) {
+	g1 := test.GenGuest(1)
+	g2 := test.GenGuest(2)
+	gc12 := NewEmptyGuestCollection().Append(g1).Append(g2)
+	assert.Equal(t, 2, gc12.Len())
+
+	gc2 := gc12.Remove(g1.UserID())
+	gc1 := gc12.Remove(g2.UserID())
+
+	for _, tt := range []struct {
+		name                  string
+		guest                 *GuestCollection
+		existsID, notExistsID *user.UserID
+	}{
+		{"1", gc1, g1.UserID(), g2.UserID()},
+		{"2", gc2, g2.UserID(), g1.UserID()},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, 1, tt.guest.Len())
+			assert.Equal(t, tt.existsID.String(), tt.guest.Nth(0).UserID().String())
+			assert.Nil(t, tt.guest.Remove(tt.notExistsID))
+			assert.Equal(t, 0, tt.guest.Remove(tt.existsID).Len())
+		})
+	}
 }

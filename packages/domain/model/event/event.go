@@ -4,6 +4,7 @@ import (
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/circle"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/common/path"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/event/guest"
+	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/user"
 )
 
 type Event struct {
@@ -70,6 +71,15 @@ func (en *Event) Identical(e *Event) bool {
 
 func (e *Event) JoinGuest(g *guest.Guest) *Event {
 	newGuests := e.guest.AppendOrUpdate(g)
+	if newGuests == nil {
+		return nil
+	}
+	newEvent := Event{e.id, e.circleID, e.name, e.path, *newGuests}
+	return &newEvent
+}
+
+func (e *Event) RemoveGuest(i *user.UserID) *Event {
+	newGuests := e.guest.Remove(i)
 	if newGuests == nil {
 		return nil
 	}
