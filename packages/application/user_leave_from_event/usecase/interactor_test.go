@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	. "github.com/aokuyama/circle_scheduler-api/packages/application/user_join_to_event/usecase"
+	. "github.com/aokuyama/circle_scheduler-api/packages/application/user_leave_from_event/usecase"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/event"
 	mock_event "github.com/aokuyama/circle_scheduler-api/packages/domain/model/event/.mock"
@@ -16,12 +16,12 @@ import (
 
 func TestInvoke(t *testing.T) {
 	e := test.GenEvent(1)
-	g := test.GenGuest(1)
+	g1 := test.GenGuest(1)
 
-	i := UserJoinToEventInput{e.ID().String(), g.UserID().String(), g.Name(), g.Number()}
+	i := UserLeaveFromEventInput{e.ID().String(), g1.UserID().String()}
 	ei := test.PanicOr(event.NewEventID(e.ID().String()))
 
-	diffEvent := test.GenEvent(11)
+	before := test.GenEvent(1).JoinGuest(g1)
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -29,11 +29,11 @@ func TestInvoke(t *testing.T) {
 	tests := []struct {
 		name            string
 		mock_repository func(r *mock_event.MockEventRepository)
-		input           UserJoinToEventInput
+		input           UserLeaveFromEventInput
 	}{
 		{"success update", func(r *mock_event.MockEventRepository) {
-			r.EXPECT().Find(ei).Return(diffEvent, nil)
-			r.EXPECT().Update(gomock.Any(), diffEvent).Return(nil)
+			r.EXPECT().Find(ei).Return(before, nil)
+			r.EXPECT().Update(gomock.Any(), before).Return(nil)
 		}, i},
 	}
 
@@ -54,11 +54,10 @@ func TestInvokeError(t *testing.T) {
 	e := test.GenEvent(1)
 	g := test.GenGuest(1)
 
-	i := UserJoinToEventInput{e.ID().String(), g.UserID().String(), g.Name(), g.Number()}
+	i := UserLeaveFromEventInput{e.ID().String(), g.UserID().String()}
 	ei := test.PanicOr(event.NewEventID(e.ID().String()))
 
-	diffEvent := test.GenEvent(11)
-	equalEvent := e.JoinGuest(g)
+	event := e.JoinGuest(g)
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -66,26 +65,26 @@ func TestInvokeError(t *testing.T) {
 	tests := []struct {
 		name            string
 		mock_repository func(r *mock_event.MockEventRepository)
-		input           UserJoinToEventInput
+		input           UserLeaveFromEventInput
 		expect          error
 	}{
-		{"invalid guest", func(r *mock_event.MockEventRepository) {
-		}, UserJoinToEventInput{"26f90f21-dd19-4df1-81ff-ea9dcbcf03d1", "fail", "name", 1}, errs.ErrBadParam},
+		{"invalid guest id", func(r *mock_event.MockEventRepository) {
+		}, UserLeaveFromEventInput{"26f90f21-dd19-4df1-81ff-ea9dcbcf03d1", "fail"}, errs.ErrBadParam},
 
 		{"invalid event id", func(r *mock_event.MockEventRepository) {
-		}, UserJoinToEventInput{"fail", "26f90f21-dd19-4df1-81ff-ea9dcbcf03d1", "name", 1}, errs.ErrBadParam},
+		}, UserLeaveFromEventInput{"fail", "26f90f21-dd19-4df1-81ff-ea9dcbcf03d1"}, errs.ErrBadParam},
 
 		{"event not found", func(r *mock_event.MockEventRepository) {
 			r.EXPECT().Find(ei).Return(nil, errs.NewNotFound("test"))
 		}, i, errs.ErrNotFound},
 
-		{"already appended", func(r *mock_event.MockEventRepository) {
-			r.EXPECT().Find(ei).Return(equalEvent, nil)
-		}, i, errs.ErrConflict},
+		{"guest not found", func(r *mock_event.MockEventRepository) {
+			r.EXPECT().Find(ei).Return(e, nil)
+		}, i, errs.ErrNotFound},
 
 		{"fail update event", func(r *mock_event.MockEventRepository) {
-			r.EXPECT().Find(ei).Return(diffEvent, nil)
-			r.EXPECT().Update(gomock.Any(), diffEvent).Return(errs.NewFatal("test"))
+			r.EXPECT().Find(ei).Return(event, nil)
+			r.EXPECT().Update(gomock.Any(), event).Return(errs.NewFatal("test"))
 		}, i, errs.ErrFatal},
 	}
 
