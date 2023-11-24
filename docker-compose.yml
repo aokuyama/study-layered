@@ -1,11 +1,9 @@
 version: "3"
 services:
-  app:
+  app: &app
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - ${DEV_PORT_WEB:-3001}:3000
     volumes:
       - ./:/workspaces/app
     working_dir: /workspaces/app
@@ -19,6 +17,14 @@ services:
       - PEPPER_PASSWORD=${PEPPER_PASSWORD:-dummy}
       - KEY_PATH=${KEY_PATH:-0123456789abcdef}
       - PEPPER_PATH=${PEPPER_PATH:-dummy}
+
+  http:
+    <<: *app
+    ports:
+      - ${DEV_PORT_WEB:-3001}:3000
+    working_dir: /workspaces/app/interfaces/http
+    command: air -c .air.toml
+
   db:
     image: postgres:15.4-bullseye
     ports:

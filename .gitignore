@@ -22,3 +22,5 @@ go.work
 
 # generated mock files
 **/.mock/
+
+interfaces/http/tmp
