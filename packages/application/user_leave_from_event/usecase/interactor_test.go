@@ -46,6 +46,7 @@ func TestInvoke(t *testing.T) {
 			o, err := u.Invoke(&tt.input)
 			assert.NotNil(t, o)
 			assert.NoError(t, err)
+			assert.NotEqual(t, &o.Event, before)
 		})
 	}
 }
