@@ -22,7 +22,6 @@ func TestInvoke(t *testing.T) {
 	i := UserJoinToEventInput{e.ID().String(), g.UserID().String(), g.Name(), g.Number()}
 	ei := test.PanicOr(event.NewEventID(e.ID().String()))
 
-	equalEvent := e.JoinGuest(g)
 	diffEvent := test.GenEvent(11)
 
 	ctrl := gomock.NewController(t)
@@ -36,10 +35,6 @@ func TestInvoke(t *testing.T) {
 		{"success update", func(r *mock_event.MockEventRepository) {
 			r.EXPECT().Find(ei).Return(diffEvent, nil)
 			r.EXPECT().Update(gomock.Any(), diffEvent).Return(nil)
-		}, i},
-
-		{"success no update", func(r *mock_event.MockEventRepository) {
-			r.EXPECT().Find(ei).Return(equalEvent, nil)
 		}, i},
 	}
 
@@ -57,10 +52,14 @@ func TestInvoke(t *testing.T) {
 }
 
 func TestInvokeError(t *testing.T) {
-	diffEvent := test.GenEvent(11)
+	e := test.GenEvent(1)
+	g := test.GenGuest(1)
 
-	i := UserJoinToEventInput{"26f90f21-dd19-4df1-81ff-ea9dcbcf03d1", "d833a112-95e8-4042-ab02-ffde48bc874a", "name", 1}
-	ei := test.PanicOr(event.NewEventID("26f90f21-dd19-4df1-81ff-ea9dcbcf03d1"))
+	i := UserJoinToEventInput{e.ID().String(), g.UserID().String(), g.Name(), g.Number()}
+	ei := test.PanicOr(event.NewEventID(e.ID().String()))
+
+	diffEvent := test.GenEvent(11)
+	equalEvent := e.JoinGuest(g)
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -85,6 +84,10 @@ func TestInvokeError(t *testing.T) {
 			r.EXPECT().Find(ei).Return(diffEvent, nil)
 			r.EXPECT().Update(gomock.Any(), diffEvent).Return(fmt.Errorf("test: %w", errs.ErrFatal))
 		}, i, errs.ErrFatal},
+
+		{"conflict", func(r *mock_event.MockEventRepository) {
+			r.EXPECT().Find(ei).Return(equalEvent, nil)
+		}, i, errs.ErrConflict},
 	}
 
 	for _, tt := range tests {
