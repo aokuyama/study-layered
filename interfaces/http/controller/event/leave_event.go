@@ -13,9 +13,14 @@ import (
 func LeaveEvent(c *gin.Context) {
 	id := auth.GetAuthorizedUser(c)
 
+	if id.String() != c.Param("user_id") {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		return
+	}
+
 	i := usecase.UserLeaveFromEventInput{
-		EventID: c.Param("id"),
-		UserID:  id.String(),
+		EventID: c.Param("event_id"),
+		UserID:  c.Param("user_id"),
 	}
 
 	p, err := prisma.NewPrismaClient()

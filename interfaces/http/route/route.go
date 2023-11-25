@@ -30,7 +30,7 @@ func Define(g *gin.Engine) {
 	v1event := g.Group("/v1/event")
 	v1event.Use(auth.Middleware)
 	{
-		v1event.POST(":id/member", event.JoinEvent)
-		v1event.DELETE(":id/member", event.LeaveEvent)
+		v1event.PUT(":event_id/member", event.JoinEvent)
+		v1event.DELETE(":event_id/member/:user_id", event.LeaveEvent)
 	}
 }

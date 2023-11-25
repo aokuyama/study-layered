@@ -24,7 +24,7 @@ func JoinEvent(c *gin.Context) {
 		return
 	}
 	i := usecase.UserJoinToEventInput{
-		EventID: c.Param("id"),
+		EventID: c.Param("event_id"),
 		UserID:  id.String(),
 		Name:    b.User.Name,
 		Number:  uint8(b.User.Number),

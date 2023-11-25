@@ -24,6 +24,7 @@ func main() {
 		AllowMethods: []string{
 			"GET",
 			"POST",
+			"PUT",
 			"DELETE",
 			"OPTIONS",
 		},
