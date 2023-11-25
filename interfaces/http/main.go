@@ -5,9 +5,9 @@ import (
 	"os"
 	"time"
 
+	"github.com/aokuyama/circle_scheduler-api/interfaces/http/controller/event"
+	"github.com/aokuyama/circle_scheduler-api/interfaces/http/controller/user"
 	"github.com/aokuyama/circle_scheduler-api/interfaces/http/middleware/auth"
-	"github.com/aokuyama/circle_scheduler-api/interfaces/http/route/event"
-	"github.com/aokuyama/circle_scheduler-api/interfaces/http/route/user"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
