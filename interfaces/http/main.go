@@ -25,8 +25,9 @@ func main() {
 			o,
 		},
 		AllowMethods: []string{
-			"POST",
 			"GET",
+			"POST",
+			"DELETE",
 			"OPTIONS",
 		},
 		AllowHeaders: []string{
@@ -62,6 +63,7 @@ func main() {
 	v1event.Use(auth.Middleware)
 	{
 		v1event.POST(":id/member", event.JoinEvent)
+		v1event.DELETE(":id/member", event.LeaveEvent)
 	}
 
 	g.Run(":3000")

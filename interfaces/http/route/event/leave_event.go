@@ -5,30 +5,18 @@ import (
 	"net/http"
 
 	"github.com/aokuyama/circle_scheduler-api/interfaces/http/middleware/auth"
-	"github.com/aokuyama/circle_scheduler-api/packages/application/user_join_to_event/usecase"
+	"github.com/aokuyama/circle_scheduler-api/packages/application/user_leave_from_event/usecase"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/persistence/prisma"
 	"github.com/gin-gonic/gin"
 )
 
-func JoinEvent(c *gin.Context) {
+func LeaveEvent(c *gin.Context) {
 	id := auth.GetAuthorizedUser(c)
 
-	b := struct {
-		User struct {
-			Name   string
-			Number int
-		}
-	}{}
-	if err := c.ShouldBindJSON(&b); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	i := usecase.UserJoinToEventInput{
+	i := usecase.UserLeaveFromEventInput{
 		EventID: c.Param("id"),
 		UserID:  id.String(),
-		Name:    b.User.Name,
-		Number:  uint8(b.User.Number),
 	}
 
 	p, err := prisma.NewPrismaClient()
@@ -56,12 +44,6 @@ func JoinEvent(c *gin.Context) {
 			})
 			return
 		}
-		if errors.Is(err, errs.ErrConflict) {
-			c.JSON(http.StatusConflict, gin.H{
-				"msg": "conflict",
-			})
-			return
-		}
 		panic(err)
 	}
 
@@ -82,11 +64,6 @@ func JoinEvent(c *gin.Context) {
 			// TODO いずれ置き換える
 			"start_at": "2000-01-01 00:00:00",
 			"remarks":  "",
-		},
-		"user": gin.H{
-			"id":     out.Guest.UserID().String(),
-			"name":   out.Guest.Name(),
-			"number": out.Guest.Number(),
 		},
 	})
 }
