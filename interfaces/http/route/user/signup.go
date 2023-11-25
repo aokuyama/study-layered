@@ -1,13 +1,12 @@
 package user
 
 import (
-	"errors"
 	"net/http"
 
+	"github.com/aokuyama/circle_scheduler-api/interfaces/http/middleware/response"
 	user_usecase "github.com/aokuyama/circle_scheduler-api/packages/application/create_user_by_password/usecase"
 	auth_usecase "github.com/aokuyama/circle_scheduler-api/packages/application/user_create_auth_token/usecase"
 
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	"github.com/aokuyama/circle_scheduler-api/packages/domain/model/user"
 	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/middleware"
 	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/persistence/prisma"
@@ -33,11 +32,8 @@ func Signup(c *gin.Context) {
 	f := user.UserFactoryImpl{}
 	uu := user_usecase.New(f, r)
 	userOut, err := uu.Invoke(&i)
-	if err != nil {
-		if errors.Is(err, errs.ErrBadParam) {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
+	if response.HandleCommonError(c, err) {
+		return
 	}
 
 	ar := middleware.NewJwt()

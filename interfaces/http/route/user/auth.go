@@ -1,12 +1,11 @@
 package user
 
 import (
-	"errors"
 	"net/http"
 
+	"github.com/aokuyama/circle_scheduler-api/interfaces/http/middleware/response"
 	user_usecase "github.com/aokuyama/circle_scheduler-api/packages/application/auth_user_by_id_and_password/usecase"
 	auth_usecase "github.com/aokuyama/circle_scheduler-api/packages/application/user_create_auth_token/usecase"
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/middleware"
 	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/persistence/prisma"
 	"github.com/gin-gonic/gin"
@@ -30,20 +29,8 @@ func Auth(c *gin.Context) {
 	r := prisma.NewUserRepositoryPrisma(p)
 	uu := user_usecase.New(r)
 	userOut, err := uu.Invoke(&i)
-	if err != nil {
-		if errors.Is(err, errs.ErrUnauthorized) {
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"message": "unauthorized",
-			})
-			return
-		}
-		if errors.Is(err, errs.ErrBadParam) {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"message": err.Error(),
-			})
-			return
-		}
-		panic(err)
+	if response.HandleCommonError(c, err) {
+		return
 	}
 
 	ar := middleware.NewJwt()

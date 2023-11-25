@@ -1,12 +1,11 @@
 package event
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/aokuyama/circle_scheduler-api/interfaces/http/middleware/auth"
+	"github.com/aokuyama/circle_scheduler-api/interfaces/http/middleware/response"
 	"github.com/aokuyama/circle_scheduler-api/packages/application/user_join_to_event/usecase"
-	"github.com/aokuyama/circle_scheduler-api/packages/domain/errs"
 	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/persistence/prisma"
 	"github.com/gin-gonic/gin"
 )
@@ -43,26 +42,8 @@ func JoinEvent(c *gin.Context) {
 
 	u := usecase.New(cr)
 	out, err := u.Invoke(&i)
-	if err != nil {
-		if errors.Is(err, errs.ErrBadParam) {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"msg": "bad request",
-			})
-			return
-		}
-		if errors.Is(err, errs.ErrNotFound) {
-			c.JSON(http.StatusNotFound, gin.H{
-				"msg": "not found",
-			})
-			return
-		}
-		if errors.Is(err, errs.ErrConflict) {
-			c.JSON(http.StatusConflict, gin.H{
-				"msg": "conflict",
-			})
-			return
-		}
-		panic(err)
+	if response.HandleCommonError(c, err) {
+		return
 	}
 
 	guest := []gin.H{}
