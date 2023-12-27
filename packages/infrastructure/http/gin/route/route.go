@@ -3,9 +3,9 @@ package route
 import (
 	"net/http"
 
-	"github.com/aokuyama/circle_scheduler-api/interfaces/http/controller/event"
-	"github.com/aokuyama/circle_scheduler-api/interfaces/http/controller/user"
-	"github.com/aokuyama/circle_scheduler-api/interfaces/http/middleware/auth"
+	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/http/gin/controller/event"
+	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/http/gin/controller/user"
+	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/http/gin/middleware/auth"
 	"github.com/gin-gonic/gin"
 )
 

@@ -9,14 +9,14 @@ replace github.com/aokuyama/circle_scheduler-api/packages/application => ./../..
 replace github.com/aokuyama/circle_scheduler-api/packages/infrastructure => ./../../packages/infrastructure
 
 require (
-	github.com/aokuyama/circle_scheduler-api/packages/application v0.0.0-00010101000000-000000000000
-	github.com/aokuyama/circle_scheduler-api/packages/domain v0.0.0-00010101000000-000000000000
 	github.com/aokuyama/circle_scheduler-api/packages/infrastructure v0.0.0-00010101000000-000000000000
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.9.1
 )
 
 require (
+	github.com/aokuyama/circle_scheduler-api/packages/application v0.0.0-00010101000000-000000000000 // indirect
+	github.com/aokuyama/circle_scheduler-api/packages/domain v0.0.0-00010101000000-000000000000 // indirect
 	github.com/bytedance/sonic v1.9.1 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect

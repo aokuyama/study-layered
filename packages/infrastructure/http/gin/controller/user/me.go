@@ -3,7 +3,7 @@ package user
 import (
 	"net/http"
 
-	"github.com/aokuyama/circle_scheduler-api/interfaces/http/middleware/auth"
+	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/http/gin/middleware/auth"
 	"github.com/gin-gonic/gin"
 )
 

@@ -3,8 +3,8 @@ package event
 import (
 	"net/http"
 
-	"github.com/aokuyama/circle_scheduler-api/interfaces/http/middleware/response"
 	"github.com/aokuyama/circle_scheduler-api/packages/application/show_event/usecase"
+	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/http/gin/middleware/response"
 	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/persistence/prisma"
 	"github.com/gin-gonic/gin"
 )

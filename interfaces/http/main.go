@@ -4,7 +4,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/aokuyama/circle_scheduler-api/interfaces/http/route"
+	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/http/gin/route"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
