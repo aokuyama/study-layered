@@ -3,6 +3,7 @@ module github.com/aokuyama/circle_scheduler-api/packages/domain
 go 1.21
 
 require (
+	github.com/go-playground/assert/v2 v2.2.0
 	github.com/google/uuid v1.3.0
 	github.com/stretchr/testify v1.8.4
 	go.uber.org/mock v0.3.0
