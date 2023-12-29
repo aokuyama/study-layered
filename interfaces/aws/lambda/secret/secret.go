@@ -13,10 +13,8 @@ import (
 )
 
 const (
-	exGetParameterEndpoint      = "http://localhost:2773/systemsmanager/parameters/get"
-	secretTokenHeaderKey        = "X-Aws-Parameters-Secrets-Token"
-	queryParameterKeyForName    = "name"
-	queryParameterKeyForVersion = "version"
+	endpoint      = "http://localhost:2773/systemsmanager/parameters/get"
+	headerSecrets = "X-Aws-Parameters-Secrets-Token"
 )
 
 type resultFromExtension struct {
@@ -34,19 +32,19 @@ type resultFromExtension struct {
 	ResultMetadata any
 }
 
-func getSecretByUsingExtension(key string, version int) (string, error) {
+func getSecretByUsingExtension(key string) (string, error) {
 	query := url.Values{}
-	query.Add(queryParameterKeyForName, key)
-	query.Add(queryParameterKeyForVersion, fmt.Sprintf("%d", version))
+	query.Add("name", key)
+	query.Add("withDecryption", "true")
 	queryStr := query.Encode()
 
-	url := fmt.Sprintf("%s?%s", exGetParameterEndpoint, queryStr)
+	url := fmt.Sprintf("%s?%s", endpoint, queryStr)
 	req, err := http.NewRequestWithContext(context.Background(), "GET", url, nil)
 	if err != nil {
 		return "", err
 	}
 
-	req.Header.Add(secretTokenHeaderKey, os.Getenv("AWS_SESSION_TOKEN"))
+	req.Header.Add(headerSecrets, os.Getenv("AWS_SESSION_TOKEN"))
 
 	client := http.Client{}
 	res, err := client.Do(req)
@@ -76,7 +74,7 @@ func getSecretByUsingExtension(key string, version int) (string, error) {
 func SetEnvBySecretParam(key, prefix string) error {
 	paramKey := "/" + prefix + "/app/secret/" + strings.ToLower(key)
 
-	v, err := getSecretByUsingExtension(paramKey, 1)
+	v, err := getSecretByUsingExtension(paramKey)
 	if err != nil {
 		return err
 	}
