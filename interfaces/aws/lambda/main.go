@@ -3,7 +3,9 @@ package main
 import (
 	"context"
 	"log"
+	"os"
 
+	"github.com/aokuyama/circle_scheduler-api/interfaces/aws/lambda/secret"
 	"github.com/aokuyama/circle_scheduler-api/packages/infrastructure/http/gin/route"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -23,7 +25,20 @@ func init() {
 }
 
 func Handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	// If no name is provided in the HTTP request body, throw an error
+	e := os.Getenv("ENV_PREFIX")
+
+	for _, key := range []string{
+		"DATABASE_URL",
+		"JWT_SECRET_KEY",
+		"KEY_PATH",
+		"PEPPER_PATH",
+		"PEPPER_PASSWORD",
+	} {
+		err := secret.SetEnvBySecretParam(key, e)
+		if err != nil {
+			panic(err)
+		}
+	}
 	return ginLambda.ProxyWithContext(ctx, req)
 }
 
