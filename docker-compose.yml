@@ -17,9 +17,12 @@ services:
       - PEPPER_PASSWORD=${PEPPER_PASSWORD:-dummy}
       - KEY_PATH=${KEY_PATH:-0123456789abcdef}
       - PEPPER_PATH=${PEPPER_PATH:-dummy}
-
+    networks:
+      - api
+      - local
   http:
     <<: *app
+    container_name: circle-scheduler-api
     ports:
       - ${DEV_PORT_WEB:-3001}:3000
     working_dir: /workspaces/app/interfaces/http
@@ -35,6 +38,14 @@ services:
       - TZ=${TZ:-}
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+    networks:
+      - local
+
 volumes:
   db:
     driver: local
+
+networks:
+  api:
+    name: circle-scheduler
+  local:
