@@ -1,0 +1,56 @@
+name: Migrate Prisma
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Deployment environment"
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set env for staging
+        if: ${{ inputs.environment == 'staging' }}
+        run: |
+          echo "AWS_ROLE_ARN_DEPLOY=${{ secrets.STG_AWS_ROLE_ARN_DEPLOY }}" >> $GITHUB_ENV
+          echo "AWS_REGION=${{ vars.STG_AWS_REGION }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_DATABASE_PATH=/stg/app/secret/database_url" >> $GITHUB_ENV
+
+      - name: Set env for production
+        if: ${{ inputs.environment == 'production' }}
+        run: |
+          echo "AWS_ROLE_ARN_DEPLOY=${{ secrets.PRD_AWS_ROLE_ARN_DEPLOY }}" >> $GITHUB_ENV
+          echo "AWS_REGION=${{ vars.PRD_AWS_REGION }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_DATABASE_PATH=/prd/app/secret/database_url" >> $GITHUB_ENV
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN_DEPLOY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Get secrets by name and by ARN
+        uses: aws-actions/aws-secretsmanager-get-secrets@v1
+        with:
+          secret-ids: |
+            DATABASE_URL,${{ env.AWS_SECRET_DATABASE_PATH }}
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21.3'
+
+      - name: Prisma Generate
+        run: ./scripts/prisma/generate.sh
+
+      - name: Prisma Migrate Deploy
+        run: ./scripts/prisma/migrate.sh

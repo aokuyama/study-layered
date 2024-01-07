@@ -7,7 +7,7 @@ COPY ./packages ./packages
 COPY ./scripts ./scripts
 COPY ./go.work.sum ./
 
-RUN ./scripts/prisma.sh
+RUN ./scripts/prisma/generate.sh
 WORKDIR /app/interfaces/aws/lambda
 RUN go build -tags lambda.norpc -o main main.go
 
