@@ -57,4 +57,4 @@ jobs:
         run: ./scripts/prisma/generate.sh
 
       - name: Prisma Migrate Deploy
-        run: ./scripts/prisma/migrate.sh
+        run: ./scripts/prisma/migrate_deploy.sh
