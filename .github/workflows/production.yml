@@ -41,33 +41,33 @@ jobs:
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
     - name: Update lambda
-        env:
-          LAMBDA_FUNCTION_ARN: ${{ vars.PRD_LAMBDA_FUNCTION_ARN }}
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG_DEPLOY: ${{ vars.PRD_IMAGE_TAG_DEPLOY }}
-          ECR_REPOSITORY: ${{ secrets.PRD_AWS_ECR_REPOSITORY }}
-        run: aws lambda update-function-code --function-name ${{ env.LAMBDA_FUNCTION_ARN }} --image-uri $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_DEPLOY
+      env:
+        LAMBDA_FUNCTION_ARN: ${{ vars.PRD_LAMBDA_FUNCTION_ARN }}
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG_DEPLOY: ${{ vars.PRD_IMAGE_TAG_DEPLOY }}
+        ECR_REPOSITORY: ${{ secrets.PRD_AWS_ECR_REPOSITORY }}
+      run: aws lambda update-function-code --function-name ${{ env.LAMBDA_FUNCTION_ARN }} --image-uri $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_DEPLOY
 
-      - name: Wait for update-function-code completion
-        timeout-minutes: 10
-        env:
-          LAMBDA_FUNCTION_ARN: ${{ vars.PRD_LAMBDA_FUNCTION_ARN }}
-          IMAGE_TAG_DEPLOY: ${{ vars.PRD_IMAGE_TAG_DEPLOY }}
-        run: |
-          while :; \
-          do \
-          LAMBDA_UPDATE_STATUS=$(aws lambda get-function --function-name ${{ env.LAMBDA_FUNCTION_ARN }} | jq -r .Configuration.LastUpdateStatus); \
-          LAMBDA_STATE=$(aws lambda get-function --function-name ${{ env.LAMBDA_FUNCTION_ARN }} | jq -r .Configuration.State); \
-            if [ "$LAMBDA_UPDATE_STATUS" = "Successful" ] && [ "$LAMBDA_STATE" = "Active" ]; \
-            then \
-              echo "update completion"; \
-              break; \
-            elif [ "$LAMBDA_UPDATE_STATUS" = "InProgress" ] || [ "$LAMBDA_STATE" = "Pending" ]; \
-            then \
-              echo "update inprogress"; \
-              sleep 5; \
-            else \
-              echo "update failed"; \
-              exit 1; \
-            fi; \
-          done
+    - name: Wait for update-function-code completion
+      timeout-minutes: 10
+      env:
+        LAMBDA_FUNCTION_ARN: ${{ vars.PRD_LAMBDA_FUNCTION_ARN }}
+        IMAGE_TAG_DEPLOY: ${{ vars.PRD_IMAGE_TAG_DEPLOY }}
+      run: |
+        while :; \
+        do \
+        LAMBDA_UPDATE_STATUS=$(aws lambda get-function --function-name ${{ env.LAMBDA_FUNCTION_ARN }} | jq -r .Configuration.LastUpdateStatus); \
+        LAMBDA_STATE=$(aws lambda get-function --function-name ${{ env.LAMBDA_FUNCTION_ARN }} | jq -r .Configuration.State); \
+          if [ "$LAMBDA_UPDATE_STATUS" = "Successful" ] && [ "$LAMBDA_STATE" = "Active" ]; \
+          then \
+            echo "update completion"; \
+            break; \
+          elif [ "$LAMBDA_UPDATE_STATUS" = "InProgress" ] || [ "$LAMBDA_STATE" = "Pending" ]; \
+          then \
+            echo "update inprogress"; \
+            sleep 5; \
+          else \
+            echo "update failed"; \
+            exit 1; \
+          fi; \
+        done

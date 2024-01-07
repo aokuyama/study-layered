@@ -36,7 +36,8 @@
 		"extensions": [
 			"msyrus.go-doc",
 			"golang.go",
-			"Prisma.prisma"
+			"Prisma.prisma",
+			"github.vscode-github-actions"
 		]
 	  }
 	}
