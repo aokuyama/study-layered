@@ -10,6 +10,10 @@ on:
         options:
           - staging
           - production
+
+permissions:
+  id-token: write
+  contents: read
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -23,14 +27,14 @@ jobs:
         run: |
           echo "AWS_ROLE_ARN_DEPLOY=${{ secrets.STG_AWS_ROLE_ARN_DEPLOY }}" >> $GITHUB_ENV
           echo "AWS_REGION=${{ vars.STG_AWS_REGION }}" >> $GITHUB_ENV
-          echo "AWS_SECRET_DATABASE_PATH=/stg/app/secret/database_url" >> $GITHUB_ENV
+          echo "AWS_SECRET_DATABASE_URL_PATH=/stg/app/secret/database_url" >> $GITHUB_ENV
 
       - name: Set env for production
         if: ${{ inputs.environment == 'production' }}
         run: |
           echo "AWS_ROLE_ARN_DEPLOY=${{ secrets.PRD_AWS_ROLE_ARN_DEPLOY }}" >> $GITHUB_ENV
           echo "AWS_REGION=${{ vars.PRD_AWS_REGION }}" >> $GITHUB_ENV
-          echo "AWS_SECRET_DATABASE_PATH=/prd/app/secret/database_url" >> $GITHUB_ENV
+          echo "AWS_SECRET_DATABASE_URL_PATH=/prd/app/secret/database_url" >> $GITHUB_ENV
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -38,11 +42,11 @@ jobs:
           role-to-assume: ${{ env.AWS_ROLE_ARN_DEPLOY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Get secrets by name and by ARN
-        uses: aws-actions/aws-secretsmanager-get-secrets@v1
+      - name: Get DATABASE_URL by ssm 
+        uses: "marvinpinto/action-inject-ssm-secrets@latest"
         with:
-          secret-ids: |
-            DATABASE_URL,${{ env.AWS_SECRET_DATABASE_PATH }}
+          ssm_parameter: ${{ env.AWS_SECRET_DATABASE_URL_PATH }}
+          env_variable_name: "DATABASE_URL"
 
       - name: Setup Go
         uses: actions/setup-go@v4
