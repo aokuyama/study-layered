@@ -1,0 +1,66 @@
+on:
+  workflow_call:
+    inputs:
+      aws_region:
+        required: true
+        type: string
+      image_tag_deploy:
+        required: true
+        type: string
+      aws_ecr_registry:
+        required: true
+        type: string
+    secrets:
+      aws_role_arn_deploy:
+        required: true
+      aws_ecr_repository:
+        required: true
+      aws_lambda_arn:
+        required: true
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  update:
+    name: Update Lambda
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.aws_role_arn_deploy }}
+          aws-region: ${{ inputs.aws_region }}
+
+      - name: Update lambda
+        env:
+          LAMBDA_FUNCTION_ARN: ${{ secrets.aws_lambda_arn }}
+          ECR_REGISTRY: ${{ inputs.aws_ecr_registry }}
+          IMAGE_TAG_DEPLOY: ${{ inputs.image_tag_deploy }}
+          ECR_REPOSITORY: ${{ secrets.aws_ecr_repository }}
+        run: aws lambda update-function-code --function-name $LAMBDA_FUNCTION_ARN --image-uri $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_DEPLOY
+
+      - name: Wait for update-function-code completion
+        timeout-minutes: 10
+        env:
+          LAMBDA_FUNCTION_ARN: ${{ secrets.aws_lambda_arn }}
+          IMAGE_TAG_DEPLOY: ${{ inputs.image_tag_deploy }}
+        run: |
+          while :; \
+          do \
+          LAMBDA_UPDATE_STATUS=$(aws lambda get-function --function-name $LAMBDA_FUNCTION_ARN | jq -r .Configuration.LastUpdateStatus); \
+          LAMBDA_STATE=$(aws lambda get-function --function-name $LAMBDA_FUNCTION_ARN | jq -r .Configuration.State); \
+          if [ "$LAMBDA_UPDATE_STATUS" = "Successful" ] && [ "$LAMBDA_STATE" = "Active" ]; \
+          then \
+              echo "update completion"; \
+              break; \
+          elif [ "$LAMBDA_UPDATE_STATUS" = "InProgress" ] || [ "$LAMBDA_STATE" = "Pending" ]; \
+          then \
+              echo "update inprogress"; \
+              sleep 5; \
+          else \
+              echo "update failed"; \
+              exit 1; \
+          fi; \
+          done

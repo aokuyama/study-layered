@@ -1,0 +1,39 @@
+name: Deploy to AWS
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["deploy"]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    name: Test
+    uses: ./.github/workflows/build.yml
+
+  push-staging:
+    name: Staging
+    needs: [build]
+    uses: ./.github/workflows/push.yml
+    with:
+      aws_region: ${{ vars.STG_AWS_REGION }}
+      image_tag_deploy: ${{ vars.STG_IMAGE_TAG_DEPLOY }}
+    secrets:
+      aws_role_arn_deploy: ${{ secrets.STG_AWS_ROLE_ARN_DEPLOY }}
+      aws_ecr_repository: ${{ secrets.STG_AWS_ECR_REPOSITORY }}
+
+  update-staging:
+    name: Staging
+    needs: [push-staging]
+    uses: ./.github/workflows/update_lambda.yml
+    with:
+      aws_region: ${{ vars.STG_AWS_REGION }}
+      image_tag_deploy: ${{ vars.STG_IMAGE_TAG_DEPLOY }}
+      aws_ecr_registry: ${{ needs.push-staging.outputs.registry }}
+    secrets:
+      aws_role_arn_deploy: ${{ secrets.STG_AWS_ROLE_ARN_DEPLOY }}
+      aws_ecr_repository: ${{ secrets.STG_AWS_ECR_REPOSITORY }}
+      aws_lambda_arn: ${{ secrets.STG_AWS_LAMBDA_ARN }}

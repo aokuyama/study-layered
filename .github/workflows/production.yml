@@ -1,8 +1,7 @@
 name: Production Deploy to AWS
 
 on:
-  push:
-    branches: [ "deploy" ]
+  workflow_dispatch:
 
 permissions:
   id-token: write
@@ -14,60 +13,60 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        role-to-assume: ${{ secrets.PRD_AWS_ROLE_ARN_DEPLOY }}
-        aws-region: ${{ vars.PRD_AWS_REGION }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.PRD_AWS_ROLE_ARN_DEPLOY }}
+          aws-region: ${{ vars.PRD_AWS_REGION }}
 
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Build, tag, and push image to Amazon ECR
-      id: build-image
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        IMAGE_TAG: ${{ github.sha }}
-        IMAGE_TAG_DEPLOY: ${{ vars.PRD_IMAGE_TAG_DEPLOY }}
-        ECR_REPOSITORY: ${{ secrets.PRD_AWS_ECR_REPOSITORY }}
-      run: |
-        # Build a docker container and push it to ECR
-        docker build -f ./deploy/aws/lambda/Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_DEPLOY .
-        docker push -a $ECR_REGISTRY/$ECR_REPOSITORY
-        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG_DEPLOY: ${{ vars.PRD_IMAGE_TAG_DEPLOY }}
+          ECR_REPOSITORY: ${{ secrets.PRD_AWS_ECR_REPOSITORY }}
+        run: |
+          # Build a docker container and push it to ECR
+          docker build -f ./deploy/aws/lambda/Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_DEPLOY .
+          docker push -a $ECR_REGISTRY/$ECR_REPOSITORY
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
-    - name: Update lambda
-      env:
-        LAMBDA_FUNCTION_ARN: ${{ vars.PRD_LAMBDA_FUNCTION_ARN }}
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        IMAGE_TAG_DEPLOY: ${{ vars.PRD_IMAGE_TAG_DEPLOY }}
-        ECR_REPOSITORY: ${{ secrets.PRD_AWS_ECR_REPOSITORY }}
-      run: aws lambda update-function-code --function-name ${{ env.LAMBDA_FUNCTION_ARN }} --image-uri $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_DEPLOY
+      - name: Update lambda
+        env:
+          LAMBDA_FUNCTION_ARN: ${{ vars.PRD_LAMBDA_FUNCTION_ARN }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG_DEPLOY: ${{ vars.PRD_IMAGE_TAG_DEPLOY }}
+          ECR_REPOSITORY: ${{ secrets.PRD_AWS_ECR_REPOSITORY }}
+        run: aws lambda update-function-code --function-name ${{ env.LAMBDA_FUNCTION_ARN }} --image-uri $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_DEPLOY
 
-    - name: Wait for update-function-code completion
-      timeout-minutes: 10
-      env:
-        LAMBDA_FUNCTION_ARN: ${{ vars.PRD_LAMBDA_FUNCTION_ARN }}
-        IMAGE_TAG_DEPLOY: ${{ vars.PRD_IMAGE_TAG_DEPLOY }}
-      run: |
-        while :; \
-        do \
-        LAMBDA_UPDATE_STATUS=$(aws lambda get-function --function-name ${{ env.LAMBDA_FUNCTION_ARN }} | jq -r .Configuration.LastUpdateStatus); \
-        LAMBDA_STATE=$(aws lambda get-function --function-name ${{ env.LAMBDA_FUNCTION_ARN }} | jq -r .Configuration.State); \
-          if [ "$LAMBDA_UPDATE_STATUS" = "Successful" ] && [ "$LAMBDA_STATE" = "Active" ]; \
-          then \
-            echo "update completion"; \
-            break; \
-          elif [ "$LAMBDA_UPDATE_STATUS" = "InProgress" ] || [ "$LAMBDA_STATE" = "Pending" ]; \
-          then \
-            echo "update inprogress"; \
-            sleep 5; \
-          else \
-            echo "update failed"; \
-            exit 1; \
-          fi; \
-        done
+      - name: Wait for update-function-code completion
+        timeout-minutes: 10
+        env:
+          LAMBDA_FUNCTION_ARN: ${{ vars.PRD_LAMBDA_FUNCTION_ARN }}
+          IMAGE_TAG_DEPLOY: ${{ vars.PRD_IMAGE_TAG_DEPLOY }}
+        run: |
+          while :; \
+          do \
+          LAMBDA_UPDATE_STATUS=$(aws lambda get-function --function-name ${{ env.LAMBDA_FUNCTION_ARN }} | jq -r .Configuration.LastUpdateStatus); \
+          LAMBDA_STATE=$(aws lambda get-function --function-name ${{ env.LAMBDA_FUNCTION_ARN }} | jq -r .Configuration.State); \
+            if [ "$LAMBDA_UPDATE_STATUS" = "Successful" ] && [ "$LAMBDA_STATE" = "Active" ]; \
+            then \
+              echo "update completion"; \
+              break; \
+            elif [ "$LAMBDA_UPDATE_STATUS" = "InProgress" ] || [ "$LAMBDA_STATE" = "Pending" ]; \
+            then \
+              echo "update inprogress"; \
+              sleep 5; \
+            else \
+              echo "update failed"; \
+              exit 1; \
+            fi; \
+          done
