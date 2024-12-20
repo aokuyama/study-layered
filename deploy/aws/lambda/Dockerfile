@@ -1,4 +1,4 @@
-FROM golang:1.21.3-bookworm as build
+FROM golang:1.23.4-bookworm as build
 
 WORKDIR /app
 
@@ -11,7 +11,7 @@ RUN ./scripts/prisma/generate.sh
 WORKDIR /app/interfaces/aws/lambda
 RUN go build -tags lambda.norpc -o main main.go
 
-FROM golang:1.21.3-bookworm as layer
+FROM golang:1.23.4-bookworm as layer
 RUN apt-get update && apt-get install unzip
 RUN mkdir -p /opt
 COPY ./deploy/aws/lambda/layer.zip ./

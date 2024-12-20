@@ -1,6 +1,6 @@
 module github.com/aokuyama/circle_scheduler-api/interfaces/http
 
-go 1.21
+go 1.23.4
 
 replace github.com/aokuyama/circle_scheduler-api/packages/domain => ./../../packages/domain
 
